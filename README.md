@@ -22,6 +22,7 @@ src/
 │   │           └── app/
 │   │               ├── controllers/    # Web and API controllers
 │   │               ├── models/         # Data models
+│   │               ├── services/       # Service classes
 │   │               └── Application.java # Main application class
 │   └── resources/
 │       ├── templates/                  # Thymeleaf templates
@@ -62,6 +63,12 @@ The application will be available at http://localhost:8080
 ## API Endpoints
 
 - `GET /api/welcome` - Returns a welcome message with timestamp
+- `POST /api/signature` - Generates an email signature based on provided parameters
+  - Parameters:
+    - `firstName` - First name of the person
+    - `lastName` - Last name of the person
+    - `jobTitle` - Job title of the person
+- `GET /api/joke` - Returns a random joke
 
 ## Testing
 
