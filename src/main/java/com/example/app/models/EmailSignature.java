@@ -24,11 +24,12 @@ public class EmailSignature {
      */
     private void generateSignature() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Best regards,\n\n");
+        sb.append("Cordialement,\n\n");
         sb.append(firstName).append(" ").append(lastName).append("\n");
         sb.append(jobTitle).append("\n");
-        sb.append("Email: ").append(firstName.toLowerCase()).append(".").append(lastName.toLowerCase()).append("@company.com\n");
-        sb.append("Phone: +1 (555) 123-4567");
+        sb.append("Acloud Quarter\n");
+        sb.append("Email: ").append(firstName.toLowerCase()).append(".").append(lastName.toLowerCase()).append("@acloud.com\n");
+        sb.append("Téléphone: +33 1 23 45 67 89");
         
         this.signature = sb.toString();
     }

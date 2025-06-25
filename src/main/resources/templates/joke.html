@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Joke - Java 8 Web Application</title>
+    <title>Blagues Aléatoires - Acloud Quarter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,22 +58,27 @@
         .navigation a:hover {
             text-decoration: underline;
         }
+        .logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Random Joke Generator</h1>
-        <p>Click the button below to get a random joke.</p>
+        <img src="/images/Acloud.png" alt="Acloud Logo" class="logo">
+        <h1>Générateur de Blagues Aléatoires</h1>
+        <p>Cliquez sur le bouton ci-dessous pour obtenir une blague aléatoire.</p>
         
-        <button onclick="fetchRandomJoke()">Get Random Joke</button>
+        <button onclick="fetchRandomJoke()">Obtenir une blague aléatoire</button>
         
         <div class="joke-container">
-            <p class="joke-content" id="joke-content">Click the button to see a joke.</p>
+            <p class="joke-content" id="joke-content">Cliquez sur le bouton pour voir une blague.</p>
             <p class="joke-category" id="joke-category"></p>
         </div>
         
         <div class="navigation">
-            <a href="/">← Back to Home</a>
+            <a href="/">← Retour à l'accueil</a>
         </div>
     </div>
 
@@ -83,11 +88,11 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('joke-content').textContent = data.content;
-                    document.getElementById('joke-category').textContent = 'Category: ' + data.category;
+                    document.getElementById('joke-category').textContent = 'Catégorie: ' + data.category;
                 })
                 .catch(error => {
-                    console.error('Error fetching joke:', error);
-                    document.getElementById('joke-content').textContent = 'Error fetching joke. Please try again.';
+                    console.error('Erreur lors de la récupération de la blague:', error);
+                    document.getElementById('joke-content').textContent = 'Erreur lors de la récupération de la blague. Veuillez réessayer.';
                     document.getElementById('joke-category').textContent = '';
                 });
         }

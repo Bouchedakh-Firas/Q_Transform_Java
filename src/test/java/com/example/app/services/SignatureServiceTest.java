@@ -24,6 +24,7 @@ public class SignatureServiceTest {
         assertThat(signature.getSignature()).contains(firstName);
         assertThat(signature.getSignature()).contains(lastName);
         assertThat(signature.getSignature()).contains(jobTitle);
-        assertThat(signature.getSignature()).contains("john.doe@company.com");
+        assertThat(signature.getSignature()).contains("Acloud Quarter");
+        assertThat(signature.getSignature()).contains("john.doe@acloud.com");
     }
 }
