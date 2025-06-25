@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouveur de Restaurant Aléatoire - Acloud Quarter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-item {
+            margin-bottom: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0069d9;
+        }
+        .restaurant-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: none;
+        }
+        .restaurant-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .restaurant-info {
+            margin-bottom: 5px;
+        }
+        .restaurant-rating {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .restaurant-distance {
+            color: #4caf50;
+        }
+        .restaurant-dietary {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .navigation {
+            margin-top: 20px;
+        }
+        .navigation a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+        .loading {
+            display: none;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="/images/Acloud.png" alt="Acloud Logo" class="logo">
+        <h1>Trouveur de Restaurant Aléatoire</h1>
+        <p>Entrez votre adresse et sélectionnez vos préférences alimentaires pour trouver un restaurant aléatoire près de chez vous.</p>
+        
+        <form id="restaurant-form">
+            <div class="form-group">
+                <label for="address">Adresse:</label>
+                <input type="text" id="address" name="address" placeholder="Entrez votre adresse" required>
+            </div>
+            
+            <div class="checkbox-group">
+                <label>Préférences alimentaires:</label>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="vegetarien" name="dietaryPreferences" value="végétarien">
+                    <label for="vegetarien">Végétarien</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="vegetalien" name="dietaryPreferences" value="végétalien">
+                    <label for="vegetalien">Végétalien</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="sans-gluten" name="dietaryPreferences" value="sans gluten">
+                    <label for="sans-gluten">Sans Gluten</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="sans-lactose" name="dietaryPreferences" value="sans lactose">
+                    <label for="sans-lactose">Sans Lactose</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="fruits-de-mer" name="dietaryPreferences" value="fruits de mer">
+                    <label for="fruits-de-mer">Fruits de Mer</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="epice" name="dietaryPreferences" value="épicé">
+                    <label for="epice">Épicé</label>
+                </div>
+            </div>
+            
+            <button type="submit">Trouver un Restaurant</button>
+        </form>
+        
+        <div id="loading" class="loading">Recherche en cours...</div>
+        <div id="error-message" class="error-message"></div>
+        
+        <div id="restaurant-container" class="restaurant-container">
+            <h2>Restaurant Trouvé!</h2>
+            <div class="restaurant-name" id="restaurant-name"></div>
+            <div class="restaurant-info" id="restaurant-cuisine"></div>
+            <div class="restaurant-info">
+                <span class="restaurant-rating" id="restaurant-rating"></span>
+                <span class="restaurant-distance" id="restaurant-distance"></span>
+            </div>
+            <div class="restaurant-info" id="restaurant-address"></div>
+            <div class="restaurant-info" id="restaurant-phone"></div>
+            <div class="restaurant-info" id="restaurant-website"></div>
+            <div class="restaurant-dietary" id="restaurant-dietary"></div>
+        </div>
+        
+        <div class="navigation">
+            <a href="/">← Retour à l'accueil</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('restaurant-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const address = document.getElementById('address').value.trim();
+            const checkboxes = document.querySelectorAll('input[name="dietaryPreferences"]:checked');
+            const dietaryPreferences = Array.from(checkboxes).map(cb => cb.value);
+            
+            // Validate inputs
+            if (!address) {
+                document.getElementById('error-message').textContent = 'Veuillez entrer une adresse.';
+                return;
+            }
+            
+            // Clear any previous error messages
+            document.getElementById('error-message').textContent = '';
+            document.getElementById('restaurant-container').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            
+            // Create form data
+            const formData = new URLSearchParams();
+            formData.append('address', address);
+            dietaryPreferences.forEach(pref => {
+                formData.append('dietaryPreferences', pref);
+            });
+            
+            // Send POST request to API
+            fetch('/api/restaurant/random', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+            .then(response => {
+                document.getElementById('loading').style.display = 'none';
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Aucun restaurant correspondant à vos critères n\'a été trouvé.');
+                    }
+                    throw new Error('La réponse du réseau n\'était pas correcte');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Display the restaurant
+                document.getElementById('restaurant-name').textContent = data.name;
+                document.getElementById('restaurant-cuisine').textContent = 'Cuisine: ' + data.cuisineType;
+                document.getElementById('restaurant-rating').textContent = 'Note: ' + data.rating + '/5';
+                document.getElementById('restaurant-distance').textContent = ' (' + data.distance + ' km)';
+                document.getElementById('restaurant-address').textContent = 'Adresse: ' + data.address;
+                document.getElementById('restaurant-phone').textContent = 'Téléphone: ' + data.phoneNumber;
+                
+                if (data.website) {
+                    const websiteLink = document.createElement('a');
+                    websiteLink.href = data.website;
+                    websiteLink.target = '_blank';
+                    websiteLink.textContent = 'Visiter le site web';
+                    document.getElementById('restaurant-website').innerHTML = 'Site web: ';
+                    document.getElementById('restaurant-website').appendChild(websiteLink);
+                } else {
+                    document.getElementById('restaurant-website').textContent = '';
+                }
+                
+                if (data.dietaryOptions && data.dietaryOptions.length > 0) {
+                    document.getElementById('restaurant-dietary').textContent = 'Options alimentaires: ' + data.dietaryOptions.join(', ');
+                } else {
+                    document.getElementById('restaurant-dietary').textContent = '';
+                }
+                
+                document.getElementById('restaurant-container').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Erreur lors de la recherche de restaurant:', error);
+                document.getElementById('error-message').textContent = error.message || 'Erreur lors de la recherche de restaurant. Veuillez réessayer.';
+            });
+        });
+    </script>
+</body>
+</html>

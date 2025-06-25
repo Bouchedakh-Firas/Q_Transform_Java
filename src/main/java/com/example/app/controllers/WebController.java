@@ -35,4 +35,13 @@ public class WebController {
     public String signature() {
         return "signature";
     }
+    
+    /**
+     * Serves the restaurant finder page.
+     * @return The name of the view template to render.
+     */
+    @GetMapping("/restaurant")
+    public String restaurant() {
+        return "restaurant";
+    }
 }
