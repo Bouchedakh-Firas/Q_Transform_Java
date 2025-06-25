@@ -3,6 +3,7 @@ package com.example.app.controllers;
 import com.example.app.models.EmailSignature;
 import com.example.app.models.Joke;
 import com.example.app.models.Message;
+import com.example.app.models.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,5 +69,54 @@ public class ApiControllerTest {
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody().getContent()).isNotEmpty();
         assertThat(response.getBody().getCategory()).isNotEmpty();
+    }
+    
+    @Test
+    public void findRandomRestaurantShouldReturnRestaurant() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("address", "123 Test Street, Paris");
+        
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+        
+        ResponseEntity<Restaurant> response = this.restTemplate.postForEntity(
+                "http://localhost:" + port + "/api/restaurant/random", request, Restaurant.class);
+        
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody().getName()).isNotEmpty();
+        assertThat(response.getBody().getAddress()).isNotEmpty();
+        assertThat(response.getBody().getCuisineType()).isNotEmpty();
+    }
+    
+    @Test
+    public void findRandomRestaurantWithPreferencesShouldReturnRestaurant() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("address", "123 Test Street, Paris");
+        map.add("dietaryPreferences", "végétarien");
+        
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+        
+        ResponseEntity<Restaurant> response = this.restTemplate.postForEntity(
+                "http://localhost:" + port + "/api/restaurant/random", request, Restaurant.class);
+        
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody().getName()).isNotEmpty();
+        assertThat(response.getBody().getAddress()).isNotEmpty();
+        assertThat(response.getBody().getCuisineType()).isNotEmpty();
+        
+        // Check if the restaurant has the vegetarian option
+        boolean hasVegetarianOption = false;
+        for (String option : response.getBody().getDietaryOptions()) {
+            if (option.equalsIgnoreCase("Végétarien")) {
+                hasVegetarianOption = true;
+                break;
+            }
+        }
+        assertThat(hasVegetarianOption).isTrue();
     }
 }

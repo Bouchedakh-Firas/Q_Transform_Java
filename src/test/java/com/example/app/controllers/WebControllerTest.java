@@ -35,4 +35,11 @@ public class WebControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("signature"));
     }
+    
+    @Test
+    public void restaurantShouldReturnRestaurantView() throws Exception {
+        mockMvc.perform(get("/restaurant"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("restaurant"));
+    }
 }

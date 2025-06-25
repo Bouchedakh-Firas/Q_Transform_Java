@@ -3,7 +3,9 @@ package com.example.app.controllers;
 import com.example.app.models.EmailSignature;
 import com.example.app.models.Joke;
 import com.example.app.models.Message;
+import com.example.app.models.Restaurant;
 import com.example.app.services.JokeService;
+import com.example.app.services.RestaurantService;
 import com.example.app.services.SignatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * REST controller for handling API requests.
@@ -21,11 +24,13 @@ public class ApiController {
 
     private final JokeService jokeService;
     private final SignatureService signatureService;
+    private final RestaurantService restaurantService;
 
     @Autowired
-    public ApiController(JokeService jokeService, SignatureService signatureService) {
+    public ApiController(JokeService jokeService, SignatureService signatureService, RestaurantService restaurantService) {
         this.jokeService = jokeService;
         this.signatureService = signatureService;
+        this.restaurantService = restaurantService;
     }
 
     /**
@@ -66,5 +71,26 @@ public class ApiController {
     public ResponseEntity<Joke> getRandomJoke() {
         Joke joke = jokeService.getRandomJoke();
         return ResponseEntity.ok(joke);
+    }
+    
+    /**
+     * API endpoint for finding a random restaurant based on address and dietary preferences.
+     * 
+     * @param address The user's address
+     * @param dietaryPreferences List of dietary preferences
+     * @return A Restaurant object containing information about a random restaurant
+     */
+    @PostMapping("/restaurant/random")
+    public ResponseEntity<?> findRandomRestaurant(
+            @RequestParam String address,
+            @RequestParam(required = false) List<String> dietaryPreferences) {
+        
+        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences);
+        
+        if (restaurant == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(restaurant);
     }
 }

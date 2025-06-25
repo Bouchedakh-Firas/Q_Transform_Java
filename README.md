@@ -91,11 +91,31 @@ L'application sera disponible à l'adresse http://localhost:8080
 - `GET /api/joke` - Renvoie une blague aléatoire en français
   - Exemple de réponse : `{"content":"Pourquoi les scientifiques ne font-ils pas confiance aux atomes ? Parce qu'ils inventent tout !","category":"Science"}`
 
+- `POST /api/restaurant/random` - Trouve un restaurant aléatoire près de l'adresse spécifiée qui correspond aux préférences alimentaires
+  - Paramètres :
+    - `address` - Adresse de l'utilisateur (obligatoire)
+    - `dietaryPreferences` - Liste des préférences alimentaires (optionnel, peut être multiple)
+  - Exemple de requête : `POST /api/restaurant/random?address=123 Rue de Paris, 75001 Paris&dietaryPreferences=végétarien&dietaryPreferences=sans gluten`
+  - Exemple de réponse : 
+    ```json
+    {
+      "name": "Le Petit Bistro",
+      "address": "123 Rue de Paris, 75001 Paris",
+      "cuisineType": "Français",
+      "rating": 4.5,
+      "distance": 1.2,
+      "dietaryOptions": ["Végétarien", "Sans Gluten"],
+      "phoneNumber": "+33 1 23 45 67 89",
+      "website": "http://www.lepetitbistro.fr"
+    }
+    ```
+
 ## Pages Web
 
 - `/` - Page d'accueil avec le titre "Acloud Quarter" et le logo
 - `/joke` - Page du générateur de blagues aléatoires
 - `/signature` - Page du générateur de signatures email
+- `/restaurant` - Page du trouveur de restaurant aléatoire
 
 ## Personnalisation du logo
 
