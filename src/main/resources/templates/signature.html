@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Signature Generator - Java 8 Web Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0069d9;
+        }
+        .signature-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-line;
+            display: none;
+        }
+        .navigation {
+            margin-top: 20px;
+        }
+        .navigation a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Signature Generator</h1>
+        <p>Fill out the form below to generate a professional email signature.</p>
+        
+        <form id="signature-form">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="jobTitle">Job Title:</label>
+                <input type="text" id="jobTitle" name="jobTitle" required>
+            </div>
+            
+            <button type="submit">Generate Signature</button>
+        </form>
+        
+        <div id="error-message" class="error-message"></div>
+        
+        <div id="signature-container" class="signature-container">
+            <h3>Your Email Signature:</h3>
+            <div id="signature-content"></div>
+        </div>
+        
+        <div class="navigation">
+            <a href="/">← Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signature-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const jobTitle = document.getElementById('jobTitle').value.trim();
+            
+            // Validate inputs
+            if (!firstName || !lastName || !jobTitle) {
+                document.getElementById('error-message').textContent = 'Please fill out all fields.';
+                return;
+            }
+            
+            // Clear any previous error messages
+            document.getElementById('error-message').textContent = '';
+            
+            // Create form data
+            const formData = new URLSearchParams();
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('jobTitle', jobTitle);
+            
+            // Send POST request to API
+            fetch('/api/signature', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Display the signature
+                document.getElementById('signature-content').textContent = data.signature;
+                document.getElementById('signature-container').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error generating signature:', error);
+                document.getElementById('error-message').textContent = 'Error generating signature. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>
