@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Signature Generator - Java 8 Web Application</title>
+    <title>Générateur de Signature Email - Acloud Quarter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -71,41 +71,46 @@
             margin-top: 5px;
             font-size: 0.9em;
         }
+        .logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Email Signature Generator</h1>
-        <p>Fill out the form below to generate a professional email signature.</p>
+        <img src="/images/Acloud.png" alt="Acloud Logo" class="logo">
+        <h1>Générateur de Signature Email</h1>
+        <p>Remplissez le formulaire ci-dessous pour générer une signature email professionnelle.</p>
         
         <form id="signature-form">
             <div class="form-group">
-                <label for="firstName">First Name:</label>
+                <label for="firstName">Prénom:</label>
                 <input type="text" id="firstName" name="firstName" required>
             </div>
             
             <div class="form-group">
-                <label for="lastName">Last Name:</label>
+                <label for="lastName">Nom:</label>
                 <input type="text" id="lastName" name="lastName" required>
             </div>
             
             <div class="form-group">
-                <label for="jobTitle">Job Title:</label>
+                <label for="jobTitle">Titre du poste:</label>
                 <input type="text" id="jobTitle" name="jobTitle" required>
             </div>
             
-            <button type="submit">Generate Signature</button>
+            <button type="submit">Générer la signature</button>
         </form>
         
         <div id="error-message" class="error-message"></div>
         
         <div id="signature-container" class="signature-container">
-            <h3>Your Email Signature:</h3>
+            <h3>Votre signature email:</h3>
             <div id="signature-content"></div>
         </div>
         
         <div class="navigation">
-            <a href="/">← Back to Home</a>
+            <a href="/">← Retour à l'accueil</a>
         </div>
     </div>
 
@@ -119,7 +124,7 @@
             
             // Validate inputs
             if (!firstName || !lastName || !jobTitle) {
-                document.getElementById('error-message').textContent = 'Please fill out all fields.';
+                document.getElementById('error-message').textContent = 'Veuillez remplir tous les champs.';
                 return;
             }
             
@@ -142,7 +147,7 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('La réponse du réseau n\'était pas correcte');
                 }
                 return response.json();
             })
@@ -152,8 +157,8 @@
                 document.getElementById('signature-container').style.display = 'block';
             })
             .catch(error => {
-                console.error('Error generating signature:', error);
-                document.getElementById('error-message').textContent = 'Error generating signature. Please try again.';
+                console.error('Erreur lors de la génération de la signature:', error);
+                document.getElementById('error-message').textContent = 'Erreur lors de la génération de la signature. Veuillez réessayer.';
             });
         });
     </script>

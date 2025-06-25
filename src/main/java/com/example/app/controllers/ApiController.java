@@ -35,7 +35,7 @@ public class ApiController {
     @GetMapping("/welcome")
     public ResponseEntity<Message> getWelcomeMessage() {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        Message message = new Message("Welcome to Java 8 Web Application!", timestamp);
+        Message message = new Message("Bienvenue sur l'application web Acloud Quarter!", timestamp);
         return ResponseEntity.ok(message);
     }
     

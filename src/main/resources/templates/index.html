@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Java 8 Web Application</title>
+    <title>Acloud Quarter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,28 +52,33 @@
         .feature-buttons {
             margin-bottom: 20px;
         }
+        .logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Java 8 Web Application</h1>
-        <p>This is the landing page of our Java 8 web application.</p>
+        <img src="/images/Acloud.png" alt="Acloud Logo" class="logo">
+        <h1>Acloud Quarter</h1>
+        <p>Bienvenue sur la page d'accueil de notre application web Java 8.</p>
         
-        <button onclick="fetchWelcomeMessage()">Fetch Welcome Message</button>
+        <button onclick="fetchWelcomeMessage()">Récupérer le message de bienvenue</button>
         
         <div id="message">
-            <p>Click the button above to fetch a welcome message from the API.</p>
+            <p>Cliquez sur le bouton ci-dessus pour récupérer un message de bienvenue depuis l'API.</p>
             <p id="content"></p>
             <p id="timestamp"></p>
         </div>
         
         <div class="feature-section">
-            <h2>Application Features</h2>
-            <p>Explore the following features of our application:</p>
+            <h2>Fonctionnalités de l'application</h2>
+            <p>Explorez les fonctionnalités suivantes de notre application :</p>
             
             <div class="feature-buttons">
-                <button onclick="window.location.href='/joke'">Random Joke Generator</button>
-                <button onclick="window.location.href='/signature'">Email Signature Generator</button>
+                <button onclick="window.location.href='/joke'">Générateur de blagues aléatoires</button>
+                <button onclick="window.location.href='/signature'">Générateur de signature email</button>
             </div>
         </div>
     </div>
@@ -84,11 +89,11 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('content').textContent = data.content;
-                    document.getElementById('timestamp').textContent = 'Timestamp: ' + data.timestamp;
+                    document.getElementById('timestamp').textContent = 'Horodatage: ' + data.timestamp;
                 })
                 .catch(error => {
-                    console.error('Error fetching welcome message:', error);
-                    document.getElementById('content').textContent = 'Error fetching welcome message.';
+                    console.error('Erreur lors de la récupération du message de bienvenue:', error);
+                    document.getElementById('content').textContent = 'Erreur lors de la récupération du message de bienvenue.';
                 });
         }
         

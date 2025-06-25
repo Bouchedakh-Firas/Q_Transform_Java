@@ -32,7 +32,7 @@ public class ApiControllerTest {
                 "http://localhost:" + port + "/api/welcome", Message.class);
         
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody().getContent()).isEqualTo("Welcome to Java 8 Web Application!");
+        assertThat(response.getBody().getContent()).isEqualTo("Bienvenue sur l'application web Acloud Quarter!");
         assertThat(response.getBody().getTimestamp()).isNotNull();
     }
     
