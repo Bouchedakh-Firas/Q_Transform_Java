@@ -38,9 +38,19 @@
             padding: 10px 15px;
             border-radius: 4px;
             cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
         }
         button:hover {
             background-color: #0069d9;
+        }
+        .feature-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .feature-buttons {
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -55,6 +65,16 @@
             <p>Click the button above to fetch a welcome message from the API.</p>
             <p id="content"></p>
             <p id="timestamp"></p>
+        </div>
+        
+        <div class="feature-section">
+            <h2>Application Features</h2>
+            <p>Explore the following features of our application:</p>
+            
+            <div class="feature-buttons">
+                <button onclick="window.location.href='/joke'">Random Joke Generator</button>
+                <button onclick="window.location.href='/signature'">Email Signature Generator</button>
+            </div>
         </div>
     </div>
 

@@ -17,4 +17,22 @@ public class WebController {
     public String index() {
         return "index";
     }
+    
+    /**
+     * Serves the joke page.
+     * @return The name of the view template to render.
+     */
+    @GetMapping("/joke")
+    public String joke() {
+        return "joke";
+    }
+    
+    /**
+     * Serves the email signature page.
+     * @return The name of the view template to render.
+     */
+    @GetMapping("/signature")
+    public String signature() {
+        return "signature";
+    }
 }
