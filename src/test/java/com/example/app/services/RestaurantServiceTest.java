@@ -1,22 +1,63 @@
 package com.example.app.services;
 
 import com.example.app.models.Restaurant;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.PlacesApi;
+import com.google.maps.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class RestaurantServiceTest {
 
+    @Mock
+    private GeoApiContext geoApiContext;
+
+    @InjectMocks
     private RestaurantService restaurantService;
 
     @BeforeEach
     public void setUp() {
-        restaurantService = new RestaurantService();
+        MockitoAnnotations.openMocks(this);
+        
+        // Initialize the service with mock data
+        List<Restaurant> mockRestaurants = Arrays.asList(
+            new Restaurant(
+                "Le Petit Bistro",
+                "123 Rue de Paris, 75001 Paris",
+                "Français",
+                4.5,
+                1.2,
+                new String[]{"Végétarien", "Sans Gluten"},
+                "+33 1 23 45 67 89",
+                "http://www.lepetitbistro.fr"
+            ),
+            new Restaurant(
+                "Sushi Sakura",
+                "45 Avenue des Champs-Élysées, 75008 Paris",
+                "Japonais",
+                4.7,
+                0.8,
+                new String[]{"Végétarien", "Fruits de mer"},
+                "+33 1 23 45 67 90",
+                "http://www.sushisakura.fr"
+            )
+        );
+        
+        ReflectionTestUtils.setField(restaurantService, "mockRestaurants", mockRestaurants);
     }
 
     @Test
