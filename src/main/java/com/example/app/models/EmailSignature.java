@@ -18,6 +18,13 @@ public class EmailSignature {
         this.jobTitle = jobTitle;
         this.generateSignature();
     }
+    
+    public EmailSignature(String firstName, String lastName, String jobTitle, String signature) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.jobTitle = jobTitle;
+        this.signature = signature;
+    }
 
     /**
      * Generates an email signature based on the provided information.
