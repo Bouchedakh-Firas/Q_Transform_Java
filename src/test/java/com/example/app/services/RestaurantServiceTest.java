@@ -31,7 +31,7 @@ public class RestaurantServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(this);
         
         // Initialize the service with mock data
         List<Restaurant> mockRestaurants = Arrays.asList(
