@@ -4,119 +4,156 @@ import com.example.app.models.EmailSignature;
 import com.example.app.models.Joke;
 import com.example.app.models.Message;
 import com.example.app.models.Restaurant;
+import com.example.app.services.JokeService;
+import com.example.app.services.RestaurantService;
+import com.example.app.services.SignatureService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Arrays;
+import java.util.Collections;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(ApiController.class)
 public class ApiControllerTest {
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
-    private TestRestTemplate restTemplate;
+    private MockMvc mockMvc;
+
+    @MockBean
+    private JokeService jokeService;
+
+    @MockBean
+    private SignatureService signatureService;
+
+    @MockBean
+    private RestaurantService restaurantService;
 
     @Test
-    public void welcomeMessageShouldReturnDefaultMessage() {
-        ResponseEntity<Message> response = this.restTemplate.getForEntity(
-                "http://localhost:" + port + "/api/welcome", Message.class);
-        
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody().getContent()).isEqualTo("Bienvenue sur l'application web Acloud Quarter!");
-        assertThat(response.getBody().getTimestamp()).isNotNull();
+    public void welcomeMessageShouldReturnDefaultMessage() throws Exception {
+        mockMvc.perform(get("/api/welcome"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value("Bienvenue sur l'application web Acloud Quarter!"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
     
     @Test
-    public void createSignatureShouldReturnValidSignature() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    public void createSignatureShouldReturnValidSignature() throws Exception {
+        // Given
+        EmailSignature signature = new EmailSignature("Jane", "Smith", "Product Manager", 
+                "Jane Smith\nProduct Manager\nAcloud Quarter\njane.smith@company.com\n+33 1 23 45 67 89");
         
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("firstName", "Jane");
-        map.add("lastName", "Smith");
-        map.add("jobTitle", "Product Manager");
+        when(signatureService.generateSignature(eq("Jane"), eq("Smith"), eq("Product Manager")))
+                .thenReturn(signature);
         
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-        
-        ResponseEntity<EmailSignature> response = this.restTemplate.postForEntity(
-                "http://localhost:" + port + "/api/signature", request, EmailSignature.class);
-        
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody().getFirstName()).isEqualTo("Jane");
-        assertThat(response.getBody().getLastName()).isEqualTo("Smith");
-        assertThat(response.getBody().getJobTitle()).isEqualTo("Product Manager");
-        assertThat(response.getBody().getSignature()).contains("Jane Smith");
-        assertThat(response.getBody().getSignature()).contains("Product Manager");
-        assertThat(response.getBody().getSignature()).contains("jane.smith@company.com");
+        // When & Then
+        mockMvc.perform(post("/api/signature")
+                .param("firstName", "Jane")
+                .param("lastName", "Smith")
+                .param("jobTitle", "Product Manager")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Jane"))
+                .andExpect(jsonPath("$.lastName").value("Smith"))
+                .andExpect(jsonPath("$.jobTitle").value("Product Manager"))
+                .andExpect(jsonPath("$.signature").isNotEmpty());
     }
     
     @Test
-    public void getRandomJokeShouldReturnJoke() {
-        ResponseEntity<Joke> response = this.restTemplate.getForEntity(
-                "http://localhost:" + port + "/api/joke", Joke.class);
+    public void getRandomJokeShouldReturnJoke() throws Exception {
+        // Given
+        Joke joke = new Joke("Pourquoi les scientifiques ne font-ils pas confiance aux atomes ? Parce qu'ils inventent tout !", "Science");
         
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody().getContent()).isNotEmpty();
-        assertThat(response.getBody().getCategory()).isNotEmpty();
+        when(jokeService.getRandomJoke()).thenReturn(joke);
+        
+        // When & Then
+        mockMvc.perform(get("/api/joke"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value("Pourquoi les scientifiques ne font-ils pas confiance aux atomes ? Parce qu'ils inventent tout !"))
+                .andExpect(jsonPath("$.category").value("Science"));
     }
     
     @Test
-    public void findRandomRestaurantShouldReturnRestaurant() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    public void findRandomRestaurantShouldReturnRestaurant() throws Exception {
+        // Given
+        Restaurant restaurant = new Restaurant(
+            "Le Petit Bistro",
+            "123 Rue de Paris, 75001 Paris",
+            "Français",
+            4.5,
+            1.2,
+            new String[]{"Végétarien", "Sans Gluten"},
+            "+33 1 23 45 67 89",
+            "http://www.lepetitbistro.fr"
+        );
         
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("address", "123 Test Street, Paris");
+        when(restaurantService.findRandomRestaurant(eq("123 Test Street, Paris"), eq(Collections.emptyList())))
+                .thenReturn(restaurant);
         
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-        
-        ResponseEntity<Restaurant> response = this.restTemplate.postForEntity(
-                "http://localhost:" + port + "/api/restaurant/random", request, Restaurant.class);
-        
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody().getName()).isNotEmpty();
-        assertThat(response.getBody().getAddress()).isNotEmpty();
-        assertThat(response.getBody().getCuisineType()).isNotEmpty();
+        // When & Then
+        mockMvc.perform(post("/api/restaurant/random")
+                .param("address", "123 Test Street, Paris")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Le Petit Bistro"))
+                .andExpect(jsonPath("$.address").value("123 Rue de Paris, 75001 Paris"))
+                .andExpect(jsonPath("$.cuisineType").value("Français"))
+                .andExpect(jsonPath("$.rating").value(4.5))
+                .andExpect(jsonPath("$.distance").value(1.2))
+                .andExpect(jsonPath("$.dietaryOptions[0]").value("Végétarien"))
+                .andExpect(jsonPath("$.dietaryOptions[1]").value("Sans Gluten"))
+                .andExpect(jsonPath("$.phoneNumber").value("+33 1 23 45 67 89"))
+                .andExpect(jsonPath("$.website").value("http://www.lepetitbistro.fr"));
     }
     
     @Test
-    public void findRandomRestaurantWithPreferencesShouldReturnRestaurant() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    public void findRandomRestaurantWithPreferencesShouldReturnRestaurant() throws Exception {
+        // Given
+        Restaurant restaurant = new Restaurant(
+            "Le Végétalien",
+            "12 Rue de Rivoli, 75004 Paris",
+            "Végétalien",
+            4.6,
+            2.0,
+            new String[]{"Végétarien", "Végétalien", "Sans Gluten", "Sans Lactose"},
+            "+33 1 23 45 67 92",
+            "http://www.levegetalien.fr"
+        );
         
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("address", "123 Test Street, Paris");
-        map.add("dietaryPreferences", "végétarien");
+        when(restaurantService.findRandomRestaurant(eq("123 Test Street, Paris"), eq(Collections.singletonList("végétarien"))))
+                .thenReturn(restaurant);
         
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+        // When & Then
+        mockMvc.perform(post("/api/restaurant/random")
+                .param("address", "123 Test Street, Paris")
+                .param("dietaryPreferences", "végétarien")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Le Végétalien"))
+                .andExpect(jsonPath("$.dietaryOptions[0]").value("Végétarien"));
+    }
+    
+    @Test
+    public void findRandomRestaurantShouldReturn404WhenNoRestaurantFound() throws Exception {
+        // Given
+        when(restaurantService.findRandomRestaurant(eq("Invalid Address"), any()))
+                .thenReturn(null);
         
-        ResponseEntity<Restaurant> response = this.restTemplate.postForEntity(
-                "http://localhost:" + port + "/api/restaurant/random", request, Restaurant.class);
-        
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody().getName()).isNotEmpty();
-        assertThat(response.getBody().getAddress()).isNotEmpty();
-        assertThat(response.getBody().getCuisineType()).isNotEmpty();
-        
-        // Check if the restaurant has the vegetarian option
-        boolean hasVegetarianOption = false;
-        for (String option : response.getBody().getDietaryOptions()) {
-            if (option.equalsIgnoreCase("Végétarien")) {
-                hasVegetarianOption = true;
-                break;
-            }
-        }
-        assertThat(hasVegetarianOption).isTrue();
+        // When & Then
+        mockMvc.perform(post("/api/restaurant/random")
+                .param("address", "Invalid Address")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isNotFound());
     }
 }
