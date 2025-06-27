@@ -192,6 +192,24 @@ public class ApiControllerTest {
     }
     
     @Test
+    public void testRestaurantApiShouldReturnErrorWhenGoogleApiExceptionOccurs() throws Exception {
+        // Given
+        com.google.maps.errors.ApiException apiException = 
+            new com.google.maps.errors.ApiException("Google API error occurred");
+        
+        when(restaurantService.testGooglePlacesApi(eq("Problem Address")))
+                .thenThrow(apiException);
+        
+        // When & Then
+        mockMvc.perform(post("/api/restaurant/test")
+                .param("address", "Problem Address")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Google API error: Google API error occurred"))
+                .andExpect(jsonPath("$.status").value("400"));
+    }
+    
+    @Test
     public void findRandomRestaurantShouldReturn404WhenNoRestaurantFound() throws Exception {
         // Given
         when(restaurantService.findRandomRestaurant(eq("Invalid Address"), any()))

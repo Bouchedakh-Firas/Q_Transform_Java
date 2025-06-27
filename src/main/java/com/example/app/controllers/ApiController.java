@@ -59,7 +59,8 @@ public class ApiController {
             logger.error("Google API error: {}", e.getMessage(), e);
             Map<String, String> error = new HashMap<>();
             error.put("error", "Google API error: " + e.getMessage());
-            error.put("status", String.valueOf(e.getHttpStatusCode()));
+            // Using default status code 400 (BAD_REQUEST) as getHttpStatusCode() is not available in this version
+            error.put("status", "400");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         } catch (IllegalStateException e) {
             logger.error("Restaurant search error: {}", e.getMessage(), e);
