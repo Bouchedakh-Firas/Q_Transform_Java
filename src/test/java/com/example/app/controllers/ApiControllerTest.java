@@ -158,7 +158,7 @@ public class ApiControllerTest {
             "http://www.lepetitbistro.fr"
         );
         
-        when(restaurantService.testGooglePlacesApi(eq("123 Test Street, Paris")))
+        when(restaurantService.testGooglePlacesApi(eq("123 Test Street, Paris"), eq(null)))
                 .thenReturn(restaurant);
         
         // When & Then
@@ -180,7 +180,7 @@ public class ApiControllerTest {
     @Test
     public void testRestaurantApiShouldReturnErrorWhenApiCallFails() throws Exception {
         // Given
-        when(restaurantService.testGooglePlacesApi(eq("Invalid Address")))
+        when(restaurantService.testGooglePlacesApi(eq("Invalid Address"), eq(null)))
                 .thenThrow(new IllegalStateException("Could not geocode address: Invalid Address"));
         
         // When & Then
@@ -200,7 +200,7 @@ public class ApiControllerTest {
                 // Anonymous subclass to bypass protected constructor
             };
         
-        when(restaurantService.testGooglePlacesApi(eq("Problem Address")))
+        when(restaurantService.testGooglePlacesApi(eq("Problem Address"), eq(null)))
                 .thenThrow(apiException);
         
         // When & Then
