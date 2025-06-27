@@ -51,8 +51,18 @@
             cursor: pointer;
             margin-right: 10px;
         }
-        button:hover {
-            background-color: #0069d9;
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: white;
+        }
+        .help-text {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
         }
         button.test-api {
             background-color: #28a745;
@@ -152,6 +162,24 @@
                 <input type="text" id="address" name="address" placeholder="Entrez votre adresse" required>
             </div>
             
+            <div class="form-group">
+                <label for="foodType">Type de cuisine (optionnel):</label>
+                <select id="foodType" name="foodType">
+                    <option value="">-- Sélectionnez un type de cuisine --</option>
+                    <option value="français">Français</option>
+                    <option value="italien">Italien</option>
+                    <option value="japonais">Japonais</option>
+                    <option value="chinois">Chinois</option>
+                    <option value="indien">Indien</option>
+                    <option value="mexicain">Mexicain</option>
+                    <option value="grec">Grec</option>
+                    <option value="libanais">Libanais</option>
+                    <option value="thaïlandais">Thaïlandais</option>
+                    <option value="américain">Américain</option>
+                </select>
+                <div class="help-text">Les restaurants seront limités à un rayon de 1 km de votre adresse.</div>
+            </div>
+            
             <div class="checkbox-group">
                 <label>Préférences alimentaires:</label>
                 <div class="checkbox-item">
@@ -211,6 +239,23 @@
                     <input type="text" id="test-address" name="test-address" placeholder="Entrez une adresse pour tester l'API" required>
                 </div>
                 
+                <div class="form-group">
+                    <label for="test-foodType">Type de cuisine (optionnel):</label>
+                    <select id="test-foodType" name="test-foodType">
+                        <option value="">-- Sélectionnez un type de cuisine --</option>
+                        <option value="français">Français</option>
+                        <option value="italien">Italien</option>
+                        <option value="japonais">Japonais</option>
+                        <option value="chinois">Chinois</option>
+                        <option value="indien">Indien</option>
+                        <option value="mexicain">Mexicain</option>
+                        <option value="grec">Grec</option>
+                        <option value="libanais">Libanais</option>
+                        <option value="thaïlandais">Thaïlandais</option>
+                        <option value="américain">Américain</option>
+                    </select>
+                </div>
+                
                 <button type="submit" class="test-api">Tester l'API</button>
             </form>
             
@@ -250,6 +295,12 @@
             dietaryPreferences.forEach(pref => {
                 formData.append('dietaryPreferences', pref);
             });
+            
+            // Add food type if selected
+            const foodType = document.getElementById('foodType').value;
+            if (foodType) {
+                formData.append('foodType', foodType);
+            }
             
             // Send POST request to API
             fetch('/api/restaurant/random', {
@@ -323,6 +374,12 @@
             // Create form data
             const formData = new URLSearchParams();
             formData.append('address', address);
+            
+            // Add food type if selected
+            const foodType = document.getElementById('test-foodType').value;
+            if (foodType) {
+                formData.append('foodType', foodType);
+            }
             
             // Send POST request to API test endpoint
             fetch('/api/restaurant/test', {
