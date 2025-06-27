@@ -41,14 +41,15 @@ public class RestaurantService {
      * This method does not fall back to mock data and will throw exceptions if the API call fails.
      * 
      * @param address The user's address
+     * @param foodType Optional food type to filter restaurants (e.g., "italian", "japanese")
      * @return The first restaurant found near the address
      * @throws ApiException if the API returns an error
      * @throws IOException if there is an I/O error
      * @throws InterruptedException if the thread is interrupted
      * @throws IllegalStateException if no restaurants are found
      */
-    public Restaurant testGooglePlacesApi(String address) throws ApiException, IOException, InterruptedException {
-        logger.info("Testing Google Places API with address: {}", address);
+    public Restaurant testGooglePlacesApi(String address, String foodType) throws ApiException, IOException, InterruptedException {
+        logger.info("Testing Google Places API with address: {} and food type: {}", address, foodType);
         
         // Geocode the address
         GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, address).await();
@@ -61,14 +62,28 @@ public class RestaurantService {
         LatLng location = results[0].geometry.location;
         
         // Search for nearby restaurants
-        PlacesSearchResponse response = PlacesApi.nearbySearchQuery(geoApiContext, location)
-                .radius(5000)
-                .type(PlaceType.RESTAURANT)
-                .await();
+        PlacesSearchResponse response;
+        
+        // Build the query with a 1km radius limit
+        if (foodType != null && !foodType.isEmpty()) {
+            // If food type is provided, use it as a keyword in the search
+            response = PlacesApi.nearbySearchQuery(geoApiContext, location)
+                    .radius(1000) // 1km radius limit
+                    .type(PlaceType.RESTAURANT)
+                    .keyword(foodType)
+                    .await();
+        } else {
+            // If no food type is provided, just search for restaurants
+            response = PlacesApi.nearbySearchQuery(geoApiContext, location)
+                    .radius(1000) // 1km radius limit
+                    .type(PlaceType.RESTAURANT)
+                    .await();
+        }
         
         if (response.results.length == 0) {
-            logger.error("No restaurants found near address: {}", address);
-            throw new IllegalStateException("No restaurants found near address: " + address);
+            logger.error("No restaurants found near address: {} with food type: {}", address, foodType);
+            throw new IllegalStateException("No restaurants found near address: " + address + 
+                (foodType != null && !foodType.isEmpty() ? " with food type: " + foodType : ""));
         }
         
         // Get the first result
@@ -100,29 +115,43 @@ public class RestaurantService {
      * 
      * @param address The user's address
      * @param dietaryPreferences List of dietary preferences
+     * @param foodType Optional food type to filter restaurants (e.g., "italian", "japanese")
      * @return A random restaurant that matches the criteria, or null if none found
      */
-    public Restaurant findRandomRestaurant(String address, List<String> dietaryPreferences) {
+    public Restaurant findRandomRestaurant(String address, List<String> dietaryPreferences, String foodType) {
         try {
             // Try to geocode the address
             GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, address).await();
             if (results.length == 0) {
                 logger.error("Could not geocode address: {}", address);
-                return getRandomMockRestaurant(dietaryPreferences);
+                return getRandomMockRestaurant(dietaryPreferences, foodType);
             }
             
             // Get the location from the geocoding result
             LatLng location = results[0].geometry.location;
             
             // Search for nearby restaurants
-            PlacesSearchResponse response = PlacesApi.nearbySearchQuery(geoApiContext, location)
-                    .radius(5000)
-                    .type(PlaceType.RESTAURANT)
-                    .await();
+            PlacesSearchResponse response;
+            
+            // Build the query with a 1km radius limit
+            if (foodType != null && !foodType.isEmpty()) {
+                // If food type is provided, use it as a keyword in the search
+                response = PlacesApi.nearbySearchQuery(geoApiContext, location)
+                        .radius(1000) // 1km radius limit
+                        .type(PlaceType.RESTAURANT)
+                        .keyword(foodType)
+                        .await();
+            } else {
+                // If no food type is provided, just search for restaurants
+                response = PlacesApi.nearbySearchQuery(geoApiContext, location)
+                        .radius(1000) // 1km radius limit
+                        .type(PlaceType.RESTAURANT)
+                        .await();
+            }
             
             if (response.results.length == 0) {
-                logger.info("No restaurants found near address: {}", address);
-                return getRandomMockRestaurant(dietaryPreferences);
+                logger.info("No restaurants found near address: {} with food type: {}", address, foodType);
+                return getRandomMockRestaurant(dietaryPreferences, foodType);
             }
             
             // Convert the results to Restaurant objects
@@ -160,7 +189,7 @@ public class RestaurantService {
             
             if (matchingRestaurants.isEmpty()) {
                 logger.info("No restaurants matching dietary preferences found near address: {}", address);
-                return getRandomMockRestaurant(dietaryPreferences);
+                return getRandomMockRestaurant(dietaryPreferences, foodType);
             }
             
             // Return a random restaurant from the matching ones
@@ -168,7 +197,7 @@ public class RestaurantService {
             return matchingRestaurants.get(index);
         } catch (Exception e) {
             logger.error("Error finding restaurant near address: {}", address, e);
-            return getRandomMockRestaurant(dietaryPreferences);
+            return getRandomMockRestaurant(dietaryPreferences, foodType);
         }
     }
     
@@ -176,17 +205,25 @@ public class RestaurantService {
      * Gets a random restaurant from the mock data that matches the dietary preferences.
      * 
      * @param dietaryPreferences List of dietary preferences
+     * @param foodType Optional food type to filter restaurants
      * @return A random restaurant that matches the criteria, or null if none found
      */
-    private Restaurant getRandomMockRestaurant(List<String> dietaryPreferences) {
-        logger.info("Using mock restaurant data");
+    private Restaurant getRandomMockRestaurant(List<String> dietaryPreferences, String foodType) {
+        logger.info("Using mock restaurant data with food type: {}", foodType);
         
-        List<Restaurant> matchingRestaurants;
+        List<Restaurant> matchingRestaurants = new ArrayList<>(mockRestaurants);
         
-        if (dietaryPreferences == null || dietaryPreferences.isEmpty()) {
-            matchingRestaurants = new ArrayList<>(mockRestaurants);
-        } else {
-            matchingRestaurants = mockRestaurants.stream()
+        // Filter by food type if provided
+        if (foodType != null && !foodType.isEmpty()) {
+            matchingRestaurants = matchingRestaurants.stream()
+                .filter(restaurant -> 
+                    restaurant.getCuisineType().toLowerCase().contains(foodType.toLowerCase()))
+                .collect(Collectors.toList());
+        }
+        
+        // Filter by dietary preferences if provided
+        if (dietaryPreferences != null && !dietaryPreferences.isEmpty()) {
+            matchingRestaurants = matchingRestaurants.stream()
                 .filter(restaurant -> {
                     for (String option : restaurant.getDietaryOptions()) {
                         for (String preference : dietaryPreferences) {

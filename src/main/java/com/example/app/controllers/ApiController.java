@@ -46,14 +46,17 @@ public class ApiController {
      * Returns the first restaurant found near the specified address.
      * 
      * @param address The user's address
+     * @param foodType Optional food type to filter restaurants (e.g., "italian", "japanese")
      * @return A Restaurant object or error details
      */
     @PostMapping("/restaurant/test")
-    public ResponseEntity<?> testRestaurantApi(@RequestParam String address) {
-        logger.info("Testing restaurant API with address: {}", address);
+    public ResponseEntity<?> testRestaurantApi(
+            @RequestParam String address,
+            @RequestParam(required = false) String foodType) {
+        logger.info("Testing restaurant API with address: {} and food type: {}", address, foodType);
         
         try {
-            Restaurant restaurant = restaurantService.testGooglePlacesApi(address);
+            Restaurant restaurant = restaurantService.testGooglePlacesApi(address, foodType);
             return ResponseEntity.ok(restaurant);
         } catch (ApiException e) {
             logger.error("Google API error: {}", e.getMessage(), e);
@@ -131,14 +134,16 @@ public class ApiController {
      * 
      * @param address The user's address
      * @param dietaryPreferences List of dietary preferences
+     * @param foodType Optional food type to filter restaurants (e.g., "italian", "japanese")
      * @return A Restaurant object containing information about a random restaurant
      */
     @PostMapping("/restaurant/random")
     public ResponseEntity<?> findRandomRestaurant(
             @RequestParam String address,
-            @RequestParam(required = false) List<String> dietaryPreferences) {
+            @RequestParam(required = false) List<String> dietaryPreferences,
+            @RequestParam(required = false) String foodType) {
         
-        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences);
+        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences, foodType);
         
         if (restaurant == null) {
             return ResponseEntity.notFound().build();

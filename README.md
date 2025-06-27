@@ -108,27 +108,31 @@ L'application sera disponible à l'adresse http://localhost:8080
   - Paramètres :
     - `address` - Adresse de l'utilisateur (obligatoire)
     - `dietaryPreferences` - Liste des préférences alimentaires (optionnel, peut être multiple)
-  - Exemple de requête : `POST /api/restaurant/random?address=123 Rue de Paris, 75001 Paris&dietaryPreferences=végétarien&dietaryPreferences=sans gluten`
+    - `foodType` - Type de cuisine recherché (optionnel, un seul type peut être spécifié)
+  - Exemple de requête : `POST /api/restaurant/random?address=123 Rue de Paris, 75001 Paris&dietaryPreferences=végétarien&foodType=italien`
   - Exemple de réponse : 
     ```json
     {
       "name": "Le Petit Bistro",
       "address": "123 Rue de Paris, 75001 Paris",
-      "cuisineType": "Français",
+      "cuisineType": "Italien",
       "rating": 4.5,
-      "distance": 1.2,
+      "distance": 0.8,
       "dietaryOptions": ["Végétarien", "Sans Gluten"],
       "phoneNumber": "+33 1 23 45 67 89",
       "website": "http://www.lepetitbistro.fr"
     }
     ```
+  - Note : La recherche est limitée à un rayon de 1 km autour de l'adresse spécifiée.
 
 - `POST /api/restaurant/test` - Teste l'API Google Places en trouvant le premier restaurant près de l'adresse spécifiée
   - Paramètres :
     - `address` - Adresse de l'utilisateur (obligatoire)
-  - Exemple de requête : `POST /api/restaurant/test?address=123 Rue de Paris, 75001 Paris`
+    - `foodType` - Type de cuisine recherché (optionnel)
+  - Exemple de requête : `POST /api/restaurant/test?address=123 Rue de Paris, 75001 Paris&foodType=japonais`
   - Exemple de réponse : Similaire à `/api/restaurant/random` mais renvoie toujours le premier résultat de l'API Google Places
   - En cas d'erreur, renvoie un message d'erreur détaillé avec le code d'état HTTP approprié
+  - Note : La recherche est limitée à un rayon de 1 km autour de l'adresse spécifiée.
 
 ## Pages Web
 
