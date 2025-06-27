@@ -12,6 +12,7 @@ Ce projet démontre une application web Java 8 de base avec les fonctionnalités
 - Page d'accueil avec intégration API
 - Interface utilisateur en français
 - Logo personnalisable
+- Test de l'API Google Places pour la recherche de restaurants
 
 ## Structure du projet
 
@@ -50,6 +51,18 @@ src/
 
 - Java 8 JDK
 - Maven 3.6+ ou outil de build compatible
+- Clé API Google Maps valide pour les fonctionnalités de recherche de restaurants
+
+## Configuration de l'API Google
+
+Pour utiliser les fonctionnalités de recherche de restaurants, vous devez configurer une clé API Google Maps valide :
+
+1. Obtenez une clé API Google Maps avec les API Places et Geocoding activées depuis la [Console Google Cloud](https://console.cloud.google.com/)
+2. Ouvrez le fichier `src/main/resources/application.properties`
+3. Remplacez `YOUR_GOOGLE_API_KEY` par votre clé API Google Maps :
+   ```
+   google.api.key=YOUR_ACTUAL_API_KEY_HERE
+   ```
 
 ## Construction du projet
 
@@ -110,12 +123,32 @@ L'application sera disponible à l'adresse http://localhost:8080
     }
     ```
 
+- `POST /api/restaurant/test` - Teste l'API Google Places en trouvant le premier restaurant près de l'adresse spécifiée
+  - Paramètres :
+    - `address` - Adresse de l'utilisateur (obligatoire)
+  - Exemple de requête : `POST /api/restaurant/test?address=123 Rue de Paris, 75001 Paris`
+  - Exemple de réponse : Similaire à `/api/restaurant/random` mais renvoie toujours le premier résultat de l'API Google Places
+  - En cas d'erreur, renvoie un message d'erreur détaillé avec le code d'état HTTP approprié
+
 ## Pages Web
 
 - `/` - Page d'accueil avec le titre "Acloud Quarter" et le logo
 - `/joke` - Page du générateur de blagues aléatoires
 - `/signature` - Page du générateur de signatures email
-- `/restaurant` - Page du trouveur de restaurant aléatoire
+- `/restaurant` - Page du trouveur de restaurant aléatoire avec fonctionnalité de test de l'API
+
+## Test de l'API Restaurant
+
+La page `/restaurant` inclut maintenant une section de test de l'API qui permet de :
+
+1. Entrer une adresse pour tester l'API Google Places
+2. Voir le premier résultat retourné par l'API
+3. Afficher les erreurs éventuelles en cas de problème avec l'API
+
+Cette fonctionnalité est utile pour :
+- Vérifier que votre clé API Google est correctement configurée
+- Tester la connectivité avec l'API Google Places
+- Voir les données brutes retournées par l'API
 
 ## Personnalisation du logo
 

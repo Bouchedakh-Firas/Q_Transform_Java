@@ -4,12 +4,14 @@ import com.example.app.models.Restaurant;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.PlacesApi;
+import com.google.maps.errors.ApiException;
 import com.google.maps.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,6 +34,65 @@ public class RestaurantService {
         this.geoApiContext = geoApiContext;
         this.random = new Random();
         this.mockRestaurants = initializeMockRestaurants();
+    }
+    
+    /**
+     * Tests the Google Places API by finding the first restaurant near the specified address.
+     * This method does not fall back to mock data and will throw exceptions if the API call fails.
+     * 
+     * @param address The user's address
+     * @return The first restaurant found near the address
+     * @throws ApiException if the API returns an error
+     * @throws IOException if there is an I/O error
+     * @throws InterruptedException if the thread is interrupted
+     * @throws IllegalStateException if no restaurants are found
+     */
+    public Restaurant testGooglePlacesApi(String address) throws ApiException, IOException, InterruptedException {
+        logger.info("Testing Google Places API with address: {}", address);
+        
+        // Geocode the address
+        GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, address).await();
+        if (results.length == 0) {
+            logger.error("Could not geocode address: {}", address);
+            throw new IllegalStateException("Could not geocode address: " + address);
+        }
+        
+        // Get the location from the geocoding result
+        LatLng location = results[0].geometry.location;
+        
+        // Search for nearby restaurants
+        PlacesSearchResponse response = PlacesApi.nearbySearchQuery(geoApiContext, location)
+                .radius(5000)
+                .type(PlaceType.RESTAURANT)
+                .await();
+        
+        if (response.results.length == 0) {
+            logger.error("No restaurants found near address: {}", address);
+            throw new IllegalStateException("No restaurants found near address: " + address);
+        }
+        
+        // Get the first result
+        PlacesSearchResult result = response.results[0];
+        
+        try {
+            // Get more details about the place
+            PlaceDetails details = PlacesApi.placeDetails(geoApiContext, result.placeId).await();
+            
+            // Create a Restaurant object
+            return new Restaurant(
+                result.name,
+                result.vicinity,
+                getRestaurantType(result),
+                result.rating,
+                calculateDistance(location, result.geometry.location),
+                getDietaryOptions(result),
+                details.formattedPhoneNumber != null ? details.formattedPhoneNumber : "",
+                details.website != null ? details.website.toString() : ""
+            );
+        } catch (Exception e) {
+            logger.error("Error getting details for restaurant: {}", result.name, e);
+            throw new IOException("Error getting details for restaurant: " + result.name, e);
+        }
     }
     
     /**
