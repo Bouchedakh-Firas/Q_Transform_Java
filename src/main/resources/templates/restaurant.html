@@ -54,6 +54,12 @@
         button:hover {
             background-color: #0069d9;
         }
+        button.test-api {
+            background-color: #28a745;
+        }
+        button.test-api:hover {
+            background-color: #218838;
+        }
         .restaurant-container {
             margin-top: 20px;
             padding: 15px;
@@ -102,6 +108,35 @@
         .loading {
             display: none;
             margin-top: 15px;
+        }
+        .api-test-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .api-test-form {
+            margin-bottom: 20px;
+        }
+        .api-test-result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: none;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+        .api-test-loading {
+            display: none;
+            margin-top: 15px;
+        }
+        .api-test-error {
+            color: #dc3545;
+            margin-top: 5px;
+            font-size: 0.9em;
         }
     </style>
 </head>
@@ -163,6 +198,26 @@
             <div class="restaurant-info" id="restaurant-phone"></div>
             <div class="restaurant-info" id="restaurant-website"></div>
             <div class="restaurant-dietary" id="restaurant-dietary"></div>
+        </div>
+        
+        <!-- API Test Section -->
+        <div class="api-test-section">
+            <h2>Test de l'API Restaurant</h2>
+            <p>Testez l'API Google Places en entrant une adresse ci-dessous. Le premier résultat sera affiché.</p>
+            
+            <form id="api-test-form" class="api-test-form">
+                <div class="form-group">
+                    <label for="test-address">Adresse pour le test:</label>
+                    <input type="text" id="test-address" name="test-address" placeholder="Entrez une adresse pour tester l'API" required>
+                </div>
+                
+                <button type="submit" class="test-api">Tester l'API</button>
+            </form>
+            
+            <div id="api-test-loading" class="api-test-loading">Test de l'API en cours...</div>
+            <div id="api-test-error" class="api-test-error"></div>
+            
+            <div id="api-test-result" class="api-test-result"></div>
         </div>
         
         <div class="navigation">
@@ -245,6 +300,70 @@
             .catch(error => {
                 console.error('Erreur lors de la recherche de restaurant:', error);
                 document.getElementById('error-message').textContent = error.message || 'Erreur lors de la recherche de restaurant. Veuillez réessayer.';
+            });
+        });
+        
+        // API Test Form Handler
+        document.getElementById('api-test-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const address = document.getElementById('test-address').value.trim();
+            
+            // Validate inputs
+            if (!address) {
+                document.getElementById('api-test-error').textContent = 'Veuillez entrer une adresse pour le test.';
+                return;
+            }
+            
+            // Clear any previous results or errors
+            document.getElementById('api-test-error').textContent = '';
+            document.getElementById('api-test-result').style.display = 'none';
+            document.getElementById('api-test-loading').style.display = 'block';
+            
+            // Create form data
+            const formData = new URLSearchParams();
+            formData.append('address', address);
+            
+            // Send POST request to API test endpoint
+            fetch('/api/restaurant/test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+            .then(response => {
+                document.getElementById('api-test-loading').style.display = 'none';
+                
+                // Always get the JSON response, even if it's an error
+                return response.json().then(data => {
+                    // Add the HTTP status to the data for display
+                    return { 
+                        status: response.status,
+                        statusText: response.statusText,
+                        data: data
+                    };
+                });
+            })
+            .then(result => {
+                // Format the result as JSON with indentation
+                const formattedResult = JSON.stringify(result, null, 2);
+                
+                // Display the result
+                document.getElementById('api-test-result').textContent = formattedResult;
+                document.getElementById('api-test-result').style.display = 'block';
+                
+                // If it's an error response, also show in the error section
+                if (result.status >= 400) {
+                    document.getElementById('api-test-error').textContent = 
+                        `Erreur ${result.status}: ${result.data.error || result.statusText}`;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors du test de l\'API:', error);
+                document.getElementById('api-test-loading').style.display = 'none';
+                document.getElementById('api-test-error').textContent = 
+                    error.message || 'Erreur lors du test de l\'API. Veuillez réessayer.';
             });
         });
     </script>

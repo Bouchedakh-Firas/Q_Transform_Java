@@ -145,6 +145,53 @@ public class ApiControllerTest {
     }
     
     @Test
+    public void testRestaurantApiShouldReturnRestaurant() throws Exception {
+        // Given
+        Restaurant restaurant = new Restaurant(
+            "Le Petit Bistro",
+            "123 Rue de Paris, 75001 Paris",
+            "Français",
+            4.5,
+            1.2,
+            new String[]{"Végétarien", "Sans Gluten"},
+            "+33 1 23 45 67 89",
+            "http://www.lepetitbistro.fr"
+        );
+        
+        when(restaurantService.testGooglePlacesApi(eq("123 Test Street, Paris")))
+                .thenReturn(restaurant);
+        
+        // When & Then
+        mockMvc.perform(post("/api/restaurant/test")
+                .param("address", "123 Test Street, Paris")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Le Petit Bistro"))
+                .andExpect(jsonPath("$.address").value("123 Rue de Paris, 75001 Paris"))
+                .andExpect(jsonPath("$.cuisineType").value("Français"))
+                .andExpect(jsonPath("$.rating").value(4.5))
+                .andExpect(jsonPath("$.distance").value(1.2))
+                .andExpect(jsonPath("$.dietaryOptions[0]").value("Végétarien"))
+                .andExpect(jsonPath("$.dietaryOptions[1]").value("Sans Gluten"))
+                .andExpect(jsonPath("$.phoneNumber").value("+33 1 23 45 67 89"))
+                .andExpect(jsonPath("$.website").value("http://www.lepetitbistro.fr"));
+    }
+    
+    @Test
+    public void testRestaurantApiShouldReturnErrorWhenApiCallFails() throws Exception {
+        // Given
+        when(restaurantService.testGooglePlacesApi(eq("Invalid Address")))
+                .thenThrow(new IllegalStateException("Could not geocode address: Invalid Address"));
+        
+        // When & Then
+        mockMvc.perform(post("/api/restaurant/test")
+                .param("address", "Invalid Address")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Could not geocode address: Invalid Address"));
+    }
+    
+    @Test
     public void findRandomRestaurantShouldReturn404WhenNoRestaurantFound() throws Exception {
         // Given
         when(restaurantService.findRandomRestaurant(eq("Invalid Address"), any()))
