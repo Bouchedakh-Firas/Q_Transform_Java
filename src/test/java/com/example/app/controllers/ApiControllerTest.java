@@ -98,7 +98,7 @@ public class ApiControllerTest {
             "http://www.lepetitbistro.fr"
         );
         
-        when(restaurantService.findRandomRestaurant(eq("123 Test Street, Paris"), eq(Collections.emptyList())))
+        when(restaurantService.findRandomRestaurant(eq("123 Test Street, Paris"), eq(Collections.emptyList()), eq(null)))
                 .thenReturn(restaurant);
         
         // When & Then
@@ -131,7 +131,7 @@ public class ApiControllerTest {
             "http://www.levegetalien.fr"
         );
         
-        when(restaurantService.findRandomRestaurant(eq("123 Test Street, Paris"), eq(Collections.singletonList("végétarien"))))
+        when(restaurantService.findRandomRestaurant(eq("123 Test Street, Paris"), eq(Collections.singletonList("végétarien")), eq(null)))
                 .thenReturn(restaurant);
         
         // When & Then
@@ -215,7 +215,7 @@ public class ApiControllerTest {
     @Test
     public void findRandomRestaurantShouldReturn404WhenNoRestaurantFound() throws Exception {
         // Given
-        when(restaurantService.findRandomRestaurant(eq("Invalid Address"), any()))
+        when(restaurantService.findRandomRestaurant(eq("Invalid Address"), any(), any()))
                 .thenReturn(null);
         
         // When & Then

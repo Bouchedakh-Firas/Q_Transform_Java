@@ -67,9 +67,10 @@ public class RestaurantServiceTest {
         // Given
         String address = "123 Test Street, Paris";
         List<String> dietaryPreferences = Collections.emptyList();
+        String foodType = null; // No specific food type
 
         // When
-        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences);
+        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences, foodType);
 
         // Then
         assertThat(restaurant).isNotNull();
@@ -83,9 +84,10 @@ public class RestaurantServiceTest {
         // Given
         String address = "123 Test Street, Paris";
         List<String> dietaryPreferences = Collections.singletonList("végétarien");
+        String foodType = null; // No specific food type
 
         // When
-        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences);
+        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences, foodType);
 
         // Then
         assertThat(restaurant).isNotNull();
@@ -109,9 +111,10 @@ public class RestaurantServiceTest {
         // Given
         String address = "123 Test Street, Paris";
         List<String> dietaryPreferences = Collections.singletonList("non-existent-preference");
+        String foodType = null; // No specific food type
 
         // When
-        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences);
+        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences, foodType);
 
         // Then
         assertThat(restaurant).isNull();
@@ -163,7 +166,7 @@ public class RestaurantServiceTest {
         try {
             // Since we can't easily mock static methods, we'll just verify the method doesn't throw
             // an exception with the mock data we've set up in setUp()
-            Restaurant restaurant = restaurantService.findRandomRestaurant(address, Collections.emptyList());
+            Restaurant restaurant = restaurantService.findRandomRestaurant(address, Collections.emptyList(), null);
             
             // Then
             assertThat(restaurant).isNotNull();
@@ -180,9 +183,10 @@ public class RestaurantServiceTest {
         // Given
         String address = "123 Test Street, Paris";
         List<String> dietaryPreferences = Arrays.asList("végétarien", "sans gluten");
+        String foodType = null; // No specific food type
 
         // When
-        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences);
+        Restaurant restaurant = restaurantService.findRandomRestaurant(address, dietaryPreferences, foodType);
 
         // Then
         assertThat(restaurant).isNotNull();
