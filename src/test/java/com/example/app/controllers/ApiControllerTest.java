@@ -194,8 +194,11 @@ public class ApiControllerTest {
     @Test
     public void testRestaurantApiShouldReturnErrorWhenGoogleApiExceptionOccurs() throws Exception {
         // Given
+        // Use a custom exception that extends ApiException for testing
         com.google.maps.errors.ApiException apiException = 
-            new com.google.maps.errors.ApiException("Google API error occurred");
+            new com.google.maps.errors.ApiException("Google API error occurred") {
+                // Anonymous subclass to bypass protected constructor
+            };
         
         when(restaurantService.testGooglePlacesApi(eq("Problem Address")))
                 .thenThrow(apiException);
