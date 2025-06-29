@@ -82,6 +82,19 @@
                 <button onclick="window.location.href='/restaurant'">Trouveur de restaurant aléatoire</button>
             </div>
         </div>
+        
+        <div class="feature-section">
+            <h2>Informations sur l'environnement Java</h2>
+            <button onclick="fetchJavaVersion()">Afficher la version Java</button>
+            
+            <div id="java-info" style="margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 4px; display: none;">
+                <p><strong>Version Java:</strong> <span id="java-version"></span></p>
+                <p><strong>Fournisseur:</strong> <span id="java-vendor"></span></p>
+                <p><strong>Machine Virtuelle:</strong> <span id="java-vm-name"></span></p>
+                <p><strong>Version VM:</strong> <span id="java-vm-version"></span></p>
+                <p><strong>Runtime:</strong> <span id="java-runtime"></span></p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -95,6 +108,24 @@
                 .catch(error => {
                     console.error('Erreur lors de la récupération du message de bienvenue:', error);
                     document.getElementById('content').textContent = 'Erreur lors de la récupération du message de bienvenue.';
+                });
+        }
+        
+        function fetchJavaVersion() {
+            fetch('/api/java-version')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('java-version').textContent = data.version;
+                    document.getElementById('java-vendor').textContent = data.vendor;
+                    document.getElementById('java-vm-name').textContent = data.vmName;
+                    document.getElementById('java-vm-version').textContent = data.vmVersion;
+                    document.getElementById('java-runtime').textContent = data.runtimeName;
+                    document.getElementById('java-info').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des informations Java:', error);
+                    document.getElementById('java-info').style.display = 'block';
+                    document.getElementById('java-version').textContent = 'Erreur lors de la récupération des informations.';
                 });
         }
         

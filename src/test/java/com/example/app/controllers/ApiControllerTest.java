@@ -1,6 +1,7 @@
 package com.example.app.controllers;
 
 import com.example.app.models.EmailSignature;
+import com.example.app.models.JavaVersion;
 import com.example.app.models.Joke;
 import com.example.app.models.Message;
 import com.example.app.models.Restaurant;
@@ -223,5 +224,17 @@ public class ApiControllerTest {
                 .param("address", "Invalid Address")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    public void getJavaVersionShouldReturnJavaVersionInfo() throws Exception {
+        // When & Then
+        mockMvc.perform(get("/api/java-version"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.version").isNotEmpty())
+                .andExpect(jsonPath("$.vendor").isNotEmpty())
+                .andExpect(jsonPath("$.vmName").isNotEmpty())
+                .andExpect(jsonPath("$.vmVersion").isNotEmpty())
+                .andExpect(jsonPath("$.runtimeName").isNotEmpty());
     }
 }

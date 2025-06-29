@@ -1,6 +1,7 @@
 package com.example.app.controllers;
 
 import com.example.app.models.EmailSignature;
+import com.example.app.models.JavaVersion;
 import com.example.app.models.Joke;
 import com.example.app.models.Message;
 import com.example.app.models.Restaurant;
@@ -150,5 +151,22 @@ public class ApiController {
         }
         
         return ResponseEntity.ok(restaurant);
+    }
+    
+    /**
+     * API endpoint for getting Java version information.
+     * 
+     * @return A JavaVersion object containing information about the current Java runtime
+     */
+    @GetMapping("/java-version")
+    public ResponseEntity<JavaVersion> getJavaVersion() {
+        JavaVersion javaVersion = new JavaVersion(
+            System.getProperty("java.version"),
+            System.getProperty("java.vendor"),
+            System.getProperty("java.vm.name"),
+            System.getProperty("java.vm.version"),
+            System.getProperty("java.runtime.name")
+        );
+        return ResponseEntity.ok(javaVersion);
     }
 }
