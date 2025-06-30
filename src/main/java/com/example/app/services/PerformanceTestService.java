@@ -277,7 +277,7 @@ public class PerformanceTestService {
         
         return totalLength;
     }
-}
+
     
     /**
      * Run a concurrency test by executing multiple parallel tasks.
