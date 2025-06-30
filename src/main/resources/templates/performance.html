@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests de Performance - Acloud Quarter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .test-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+        }
+        .test-buttons {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #0069d9;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            display: none;
+        }
+        .result-item {
+            margin-bottom: 10px;
+        }
+        .result-label {
+            font-weight: bold;
+        }
+        .system-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .progress {
+            height: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            line-height: 20px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .nav-buttons {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tests de Performance</h1>
+        <p>Cette page vous permet d'exécuter différents tests de performance pour évaluer les capacités de votre JDK Java.</p>
+        
+        <div class="system-info">
+            <h2>Informations Système</h2>
+            <button onclick="fetchSystemInfo()">Afficher les informations système</button>
+            <div id="system-info-results" class="results">
+                <div class="result-item">
+                    <span class="result-label">Processeurs disponibles:</span> 
+                    <span id="cpu-count">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Mémoire maximale:</span> 
+                    <span id="max-memory">-</span> MB
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Mémoire totale:</span> 
+                    <span id="total-memory">-</span> MB
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Mémoire libre:</span> 
+                    <span id="free-memory">-</span> MB
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Version Java:</span> 
+                    <span id="java-version">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Fournisseur Java:</span> 
+                    <span id="java-vendor">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Système d'exploitation:</span> 
+                    <span id="os-name">-</span> <span id="os-version">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Tests de Performance</h2>
+            <p>Cliquez sur les boutons ci-dessous pour exécuter les différents tests de performance:</p>
+            
+            <div class="test-buttons">
+                <button id="cpu-test-btn" onclick="runPerformanceTest('cpu')">Test CPU</button>
+                <button id="memory-test-btn" onclick="runPerformanceTest('memory')">Test Mémoire</button>
+                <button id="concurrency-test-btn" onclick="runPerformanceTest('concurrency')">Test Concurrence</button>
+                <button id="all-tests-btn" onclick="runAllTests()">Exécuter tous les tests</button>
+            </div>
+            
+            <div id="progress" class="progress">
+                <div id="progress-bar" class="progress-bar">0%</div>
+            </div>
+            
+            <div id="error-message" class="error"></div>
+            
+            <div id="test-results" class="hidden">
+                <h3>Résultats des Tests</h3>
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>Type de Test</th>
+                            <th>Temps d'exécution (ms)</th>
+                            <th>Mémoire utilisée (MB)</th>
+                            <th>Processeurs</th>
+                            <th>Threads</th>
+                            <th>Informations supplémentaires</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body">
+                        <!-- Results will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button onclick="window.location.href='/'">Retour à l'accueil</button>
+        </div>
+    </div>
+
+    <script>
+        // Store test results
+        const testResults = {
+            cpu: null,
+            memory: null,
+            concurrency: null
+        };
+        
+        // Track running tests
+        let runningTests = 0;
+        
+        // Format bytes to MB
+        function formatBytes(bytes) {
+            return (bytes / (1024 * 1024)).toFixed(2);
+        }
+        
+        // Fetch system information
+        function fetchSystemInfo() {
+            const resultsDiv = document.getElementById('system-info-results');
+            resultsDiv.style.display = 'block';
+            
+            fetch('/api/performance/system-info')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('cpu-count').textContent = data.availableProcessors;
+                    document.getElementById('max-memory').textContent = formatBytes(data.maxMemory);
+                    document.getElementById('total-memory').textContent = formatBytes(data.totalMemory);
+                    document.getElementById('free-memory').textContent = formatBytes(data.freeMemory);
+                    document.getElementById('java-version').textContent = data.javaVersion;
+                    document.getElementById('java-vendor').textContent = data.javaVendor;
+                    document.getElementById('os-name').textContent = data.osName;
+                    document.getElementById('os-version').textContent = data.osVersion;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des informations système:', error);
+                    showError('Erreur lors de la récupération des informations système.');
+                });
+        }
+        
+        // Run a single performance test
+        function runPerformanceTest(testType) {
+            // Disable buttons during test
+            setButtonsEnabled(false);
+            
+            // Show progress bar
+            const progressBar = document.getElementById('progress-bar');
+            const progress = document.getElementById('progress');
+            progress.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+            
+            // Hide error message
+            hideError();
+            
+            // Increment running tests counter
+            runningTests++;
+            
+            // Simulate progress updates
+            let progressValue = 0;
+            const progressInterval = setInterval(() => {
+                progressValue += 5;
+                if (progressValue <= 90) {
+                    progressBar.style.width = progressValue + '%';
+                    progressBar.textContent = progressValue + '%';
+                }
+            }, 200);
+            
+            // Make API call
+            fetch(`/api/performance/${testType}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Store result
+                    testResults[testType] = data;
+                    
+                    // Complete progress bar
+                    clearInterval(progressInterval);
+                    progressBar.style.width = '100%';
+                    progressBar.textContent = '100%';
+                    
+                    // Update results table
+                    updateResultsTable();
+                    
+                    // Hide progress bar after a delay
+                    setTimeout(() => {
+                        progress.style.display = 'none';
+                        
+                        // Decrement running tests counter
+                        runningTests--;
+                        
+                        // Re-enable buttons if no tests are running
+                        if (runningTests === 0) {
+                            setButtonsEnabled(true);
+                        }
+                    }, 500);
+                })
+                .catch(error => {
+                    console.error(`Erreur lors de l'exécution du test ${testType}:`, error);
+                    showError(`Erreur lors de l'exécution du test ${testType}: ${error.message}`);
+                    
+                    // Clear progress interval
+                    clearInterval(progressInterval);
+                    
+                    // Hide progress bar
+                    progress.style.display = 'none';
+                    
+                    // Decrement running tests counter
+                    runningTests--;
+                    
+                    // Re-enable buttons if no tests are running
+                    if (runningTests === 0) {
+                        setButtonsEnabled(true);
+                    }
+                });
+        }
+        
+        // Run all performance tests sequentially
+        function runAllTests() {
+            // Disable buttons during tests
+            setButtonsEnabled(false);
+            
+            // Hide error message
+            hideError();
+            
+            // Run CPU test first
+            runPerformanceTest('cpu');
+            
+            // Wait for CPU test to complete, then run memory test
+            setTimeout(() => {
+                if (runningTests === 0) {
+                    runPerformanceTest('memory');
+                    
+                    // Wait for memory test to complete, then run concurrency test
+                    setTimeout(() => {
+                        if (runningTests === 0) {
+                            runPerformanceTest('concurrency');
+                        }
+                    }, 1000);
+                }
+            }, 1000);
+        }
+        
+        // Update results table with test results
+        function updateResultsTable() {
+            const resultsBody = document.getElementById('results-body');
+            const resultsTable = document.getElementById('test-results');
+            
+            // Clear existing rows
+            resultsBody.innerHTML = '';
+            
+            // Add rows for each test result
+            for (const [testType, result] of Object.entries(testResults)) {
+                if (result) {
+                    const row = document.createElement('tr');
+                    
+                    // Add cells
+                    row.innerHTML = `
+                        <td>${result.testType}</td>
+                        <td>${result.executionTimeMs}</td>
+                        <td>${(result.memoryUsedBytes / (1024 * 1024)).toFixed(2)}</td>
+                        <td>${result.cpuCount}</td>
+                        <td>${result.threadCount}</td>
+                        <td>${result.additionalInfo}</td>
+                    `;
+                    
+                    resultsBody.appendChild(row);
+                }
+            }
+            
+            // Show results table if there are any results
+            if (resultsBody.children.length > 0) {
+                resultsTable.classList.remove('hidden');
+            }
+        }
+        
+        // Enable or disable all test buttons
+        function setButtonsEnabled(enabled) {
+            document.getElementById('cpu-test-btn').disabled = !enabled;
+            document.getElementById('memory-test-btn').disabled = !enabled;
+            document.getElementById('concurrency-test-btn').disabled = !enabled;
+            document.getElementById('all-tests-btn').disabled = !enabled;
+        }
+        
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        // Hide error message
+        function hideError() {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'none';
+        }
+        
+        // Fetch system info when the page loads
+        document.addEventListener('DOMContentLoaded', fetchSystemInfo);
+    </script>
+</body>
+</html>

@@ -42,4 +42,11 @@ public class WebControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("restaurant"));
     }
+    
+    @Test
+    public void performanceShouldReturnPerformanceView() throws Exception {
+        mockMvc.perform(get("/performance"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("performance"));
+    }
 }

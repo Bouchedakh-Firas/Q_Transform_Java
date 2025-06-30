@@ -44,4 +44,13 @@ public class WebController {
     public String restaurant() {
         return "restaurant";
     }
+    
+    /**
+     * Serves the performance test page.
+     * @return The name of the view template to render.
+     */
+    @GetMapping("/performance")
+    public String performance() {
+        return "performance";
+    }
 }
