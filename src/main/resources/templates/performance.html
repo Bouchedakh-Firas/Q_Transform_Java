@@ -4,23 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tests de Performance - Acloud Quarter</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        h1, h2 {
-            color: #333;
-        }
         .test-section {
             margin-top: 20px;
             padding: 15px;
@@ -30,19 +15,6 @@
         }
         .test-buttons {
             margin-bottom: 20px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        button:hover {
-            background-color: #0069d9;
         }
         button:disabled {
             background-color: #6c757d;
@@ -60,6 +32,7 @@
         }
         .result-label {
             font-weight: bold;
+            color: var(--dark-grey);
         }
         .system-info {
             margin-top: 30px;
@@ -76,7 +49,7 @@
         }
         .progress-bar {
             height: 100%;
-            background-color: #007bff;
+            background-color: var(--red-poppy);
             color: white;
             text-align: center;
             line-height: 20px;
@@ -89,7 +62,7 @@
             border-top: 1px solid #ddd;
         }
         .error {
-            color: #dc3545;
+            color: var(--red-poppy);
             margin-top: 10px;
             display: none;
         }
@@ -107,6 +80,7 @@
         }
         th {
             background-color: #f2f2f2;
+            color: var(--dark-grey);
         }
         .hidden {
             display: none;
@@ -120,7 +94,12 @@
         
         <div class="system-info">
             <h2>Informations Système</h2>
-            <button onclick="fetchSystemInfo()">Afficher les informations système</button>
+            <button class="img-button" onclick="fetchSystemInfo()">
+                <!-- Replace with actual PNG image when available -->
+                <img src="/images/buttons/system_info_button.png" alt="Afficher les informations système" 
+                     onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Afficher les informations système';">
+                <span>Afficher les informations système</span>
+            </button>
             <div id="system-info-results" class="results">
                 <div class="result-item">
                     <span class="result-label">Processeurs disponibles:</span> 
@@ -158,10 +137,30 @@
             <p>Cliquez sur les boutons ci-dessous pour exécuter les différents tests de performance:</p>
             
             <div class="test-buttons">
-                <button id="cpu-test-btn" onclick="runPerformanceTest('cpu')">Test CPU</button>
-                <button id="memory-test-btn" onclick="runPerformanceTest('memory')">Test Mémoire</button>
-                <button id="concurrency-test-btn" onclick="runPerformanceTest('concurrency')">Test Concurrence</button>
-                <button id="all-tests-btn" onclick="runAllTests()">Exécuter tous les tests</button>
+                <button class="img-button" id="cpu-test-btn" onclick="runPerformanceTest('cpu')">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/cpu_test_button.png" alt="Test CPU" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Test CPU';">
+                    <span>Test CPU</span>
+                </button>
+                <button class="img-button" id="memory-test-btn" onclick="runPerformanceTest('memory')">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/memory_test_button.png" alt="Test Mémoire" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Test Mémoire';">
+                    <span>Test Mémoire</span>
+                </button>
+                <button class="img-button" id="concurrency-test-btn" onclick="runPerformanceTest('concurrency')">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/concurrency_test_button.png" alt="Test Concurrence" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Test Concurrence';">
+                    <span>Test Concurrence</span>
+                </button>
+                <button class="img-button" id="all-tests-btn" onclick="runAllTests()">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/all_tests_button.png" alt="Exécuter tous les tests" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Exécuter tous les tests';">
+                    <span>Exécuter tous les tests</span>
+                </button>
             </div>
             
             <div id="progress" class="progress">
@@ -191,7 +190,12 @@
         </div>
         
         <div class="nav-buttons">
-            <button onclick="window.location.href='/'">Retour à l'accueil</button>
+            <button class="img-button" onclick="window.location.href='/'">
+                <!-- Replace with actual PNG image when available -->
+                <img src="/images/buttons/home_button.png" alt="Retour à l'accueil" 
+                     onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Retour à l\'accueil';">
+                <span>Retour à l'accueil</span>
+            </button>
         </div>
     </div>
 

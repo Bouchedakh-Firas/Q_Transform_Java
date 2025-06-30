@@ -4,23 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Générateur de Signature Email - Acloud Quarter</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        h1 {
-            color: #333;
-        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -28,6 +13,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: var(--dark-grey);
         }
         input[type="text"] {
             width: 100%;
@@ -35,18 +21,6 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #0069d9;
         }
         .signature-container {
             margin-top: 20px;
@@ -56,24 +30,10 @@
             white-space: pre-line;
             display: none;
         }
-        .navigation {
-            margin-top: 20px;
-        }
-        .navigation a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .navigation a:hover {
-            text-decoration: underline;
-        }
         .error-message {
-            color: #dc3545;
+            color: var(--red-poppy);
             margin-top: 5px;
             font-size: 0.9em;
-        }
-        .logo {
-            max-width: 200px;
-            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -99,7 +59,12 @@
                 <input type="text" id="jobTitle" name="jobTitle" required>
             </div>
             
-            <button type="submit">Générer la signature</button>
+            <button class="img-button" type="submit">
+                <!-- Replace with actual PNG image when available -->
+                <img src="/images/buttons/signature_button.png" alt="Générer la signature" 
+                     onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Générer la signature';">
+                <span>Générer la signature</span>
+            </button>
         </form>
         
         <div id="error-message" class="error-message"></div>

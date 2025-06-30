@@ -4,111 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acloud Quarter</title>
-    <style>
-        /* Devoteam color palette */
-        :root {
-            --devoteam-primary: #6F2DA8; /* Devoteam purple */
-            --devoteam-secondary: #4A1D71; /* Darker purple */
-            --devoteam-accent: #FF5A60; /* Accent color */
-            --devoteam-light: #F5F5F5; /* Light gray */
-            --devoteam-dark: #333333; /* Dark gray */
-            --devoteam-white: #FFFFFF; /* White */
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-            background-color: var(--devoteam-light);
-            color: var(--devoteam-dark);
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: var(--devoteam-white);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: var(--devoteam-primary);
-        }
-        h2 {
-            color: var(--devoteam-secondary);
-        }
-        #message {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: var(--devoteam-light);
-            border-radius: 4px;
-            border-left: 4px solid var(--devoteam-primary);
-        }
-        #timestamp {
-            font-size: 0.8em;
-            color: #6c757d;
-        }
-        button {
-            background-color: var(--devoteam-primary);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: var(--devoteam-secondary);
-        }
-        .feature-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
-        .feature-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .feature-button {
-            width: 150px;
-            height: 150px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--devoteam-primary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            text-align: center;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-        .feature-button:hover {
-            background-color: var(--devoteam-secondary);
-            transform: translateY(-5px);
-        }
-        .feature-icon {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 10px;
-            background-color: var(--devoteam-white);
-            border-radius: 4px;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        .logo {
-            max-width: 200px;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div class="container">
@@ -116,7 +12,12 @@
         <h1>Acloud Quarter</h1>
         <p>Bienvenue sur la page d'accueil de notre application web Java 8.</p>
         
-        <button onclick="fetchWelcomeMessage()">Récupérer le message de bienvenue</button>
+        <button class="img-button" onclick="fetchWelcomeMessage()">
+            <!-- Replace with actual PNG image when available -->
+            <img src="/images/buttons/welcome_button.png" alt="Récupérer le message de bienvenue" 
+                 onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Récupérer le message de bienvenue';">
+            <span>Récupérer le message de bienvenue</span>
+        </button>
         
         <div id="message">
             <p>Cliquez sur le bouton ci-dessus pour récupérer un message de bienvenue depuis l'API.</p>
@@ -129,60 +30,41 @@
             <p>Explorez les fonctionnalités suivantes de notre application :</p>
             
             <div class="feature-buttons">
-                <button class="feature-button" onclick="window.location.href='/joke'">
-                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="24" height="24" fill="white"/>
-                        <circle cx="12" cy="12" r="10" stroke="#6F2DA8" stroke-width="2"/>
-                        <path d="M8 14C8.5 15.5 10 17 12 17C14 17 15.5 15.5 16 14" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="8.5" cy="9.5" r="1.5" fill="#6F2DA8"/>
-                        <circle cx="15.5" cy="9.5" r="1.5" fill="#6F2DA8"/>
-                    </svg>
-                    Générateur de blagues
+                <button class="img-button" onclick="window.location.href='/joke'">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/joke_button.png" alt="Générateur de blagues" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Générateur de blagues';">
+                    <span>Générateur de blagues</span>
                 </button>
-                <button class="feature-button" onclick="window.location.href='/performance'">
-                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="24" height="24" fill="white"/>
-                        <path d="M12 3V5" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M19 12L21 12" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M12 19V21" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M3 12L5 12" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M17.6569 6.34315L16.2426 7.75736" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M16.2426 16.2426L17.6569 17.6569" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M7.75736 16.2426L6.34315 17.6569" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M6.34315 6.34315L7.75736 7.75736" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="12" cy="12" r="4" stroke="#6F2DA8" stroke-width="2"/>
-                    </svg>
-                    Tests de performance
+                <button class="img-button" onclick="window.location.href='/performance'">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/performance_button.png" alt="Tests de performance" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Tests de performance';">
+                    <span>Tests de performance</span>
                 </button>
-                <button class="feature-button" onclick="window.location.href='/restaurant'">
-                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="24" height="24" fill="white"/>
-                        <path d="M7 5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V21H7V5Z" stroke="#6F2DA8" stroke-width="2"/>
-                        <path d="M5 11H7" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M17 11H19" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M5 15H7" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M17 15H19" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M10 8H14" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M10 12H14" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M10 16H14" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    Trouveur de restaurant
+                <button class="img-button" onclick="window.location.href='/restaurant'">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/restaurant_button.png" alt="Trouveur de restaurant" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Trouveur de restaurant';">
+                    <span>Trouveur de restaurant</span>
                 </button>
-                <button class="feature-button" onclick="window.location.href='/signature'">
-                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="24" height="24" fill="white"/>
-                        <path d="M4 4H20V16H5.17L4 17.17V4ZM4 2C2.9 2 2.01 2.9 2.01 4L2 22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2H4Z" fill="#6F2DA8"/>
-                        <path d="M6 12H18" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M6 8H18" stroke="#6F2DA8" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    Générateur de signature
+                <button class="img-button" onclick="window.location.href='/signature'">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/signature_button.png" alt="Générateur de signature" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Générateur de signature';">
+                    <span>Générateur de signature</span>
                 </button>
             </div>
         </div>
         
         <div class="feature-section">
             <h2>Informations sur l'environnement Java</h2>
-            <button onclick="fetchJavaVersion()">Afficher la version Java</button>
+            <button class="img-button" onclick="fetchJavaVersion()">
+                <!-- Replace with actual PNG image when available -->
+                <img src="/images/buttons/java_info_button.png" alt="Afficher la version Java" 
+                     onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Afficher la version Java';">
+                <span>Afficher la version Java</span>
+            </button>
             
             <div id="java-info" style="margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 4px; display: none;">
                 <p><strong>Version Java:</strong> <span id="java-version"></span></p>
