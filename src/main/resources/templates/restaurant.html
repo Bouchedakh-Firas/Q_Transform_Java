@@ -4,23 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trouveur de Restaurant Aléatoire - Acloud Quarter</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        h1 {
-            color: #333;
-        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -28,6 +13,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: var(--dark-grey);
         }
         input[type="text"] {
             width: 100%;
@@ -41,15 +27,6 @@
         }
         .checkbox-item {
             margin-bottom: 5px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
         }
         select {
             width: 100%;
@@ -65,10 +42,10 @@
             margin-top: 5px;
         }
         button.test-api {
-            background-color: #28a745;
+            background-color: var(--red-poppy);
         }
         button.test-api:hover {
-            background-color: #218838;
+            background-color: var(--dark-grey);
         }
         .restaurant-container {
             margin-top: 20px;
@@ -81,39 +58,21 @@
             font-size: 1.4em;
             font-weight: bold;
             margin-bottom: 10px;
+            color: var(--red-poppy);
         }
         .restaurant-info {
             margin-bottom: 5px;
         }
         .restaurant-rating {
-            color: #ff9800;
+            color: var(--red-poppy);
             font-weight: bold;
         }
         .restaurant-distance {
-            color: #4caf50;
+            color: var(--dark-grey);
         }
         .restaurant-dietary {
             margin-top: 10px;
             font-style: italic;
-        }
-        .navigation {
-            margin-top: 20px;
-        }
-        .navigation a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .navigation a:hover {
-            text-decoration: underline;
-        }
-        .error-message {
-            color: #dc3545;
-            margin-top: 5px;
-            font-size: 0.9em;
-        }
-        .logo {
-            max-width: 200px;
-            margin-bottom: 20px;
         }
         .loading {
             display: none;
@@ -144,7 +103,7 @@
             margin-top: 15px;
         }
         .api-test-error {
-            color: #dc3545;
+            color: var(--red-poppy);
             margin-top: 5px;
             font-size: 0.9em;
         }
@@ -208,7 +167,12 @@
                 </div>
             </div>
             
-            <button type="submit">Trouver un Restaurant</button>
+            <button class="img-button" type="submit">
+                <!-- Replace with actual PNG image when available -->
+                <img src="/images/buttons/restaurant_button.png" alt="Trouver un Restaurant" 
+                     onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Trouver un Restaurant';">
+                <span>Trouver un Restaurant</span>
+            </button>
         </form>
         
         <div id="loading" class="loading">Recherche en cours...</div>
@@ -256,7 +220,12 @@
                     </select>
                 </div>
                 
-                <button type="submit" class="test-api">Tester l'API</button>
+                <button class="img-button test-api" type="submit">
+                    <!-- Replace with actual PNG image when available -->
+                    <img src="/images/buttons/api_test_button.png" alt="Tester l'API" 
+                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Tester l\'API';">
+                    <span>Tester l'API</span>
+                </button>
             </form>
             
             <div id="api-test-loading" class="api-test-loading">Test de l'API en cours...</div>
