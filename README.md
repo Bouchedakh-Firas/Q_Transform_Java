@@ -154,6 +154,66 @@ Cette fonctionnalité est utile pour :
 - Tester la connectivité avec l'API Google Places
 - Voir les données brutes retournées par l'API
 
+## Tests de Performance
+
+La page `/performance` offre une suite complète de tests pour évaluer les performances de votre environnement Java. Ces tests sont particulièrement utiles pour comparer différentes versions de JDK ou configurations système.
+
+### Types de Tests Disponibles
+
+1. **Test CPU**
+   - Calcule des nombres premiers jusqu'à 2 millions
+   - Calcule le 40ème nombre de Fibonacci
+   - Calcule la factorielle de 20
+   - **Objectif**: Évaluer les performances de calcul pur et l'optimisation des algorithmes mathématiques
+
+2. **Test Mémoire**
+   - Alloue et manipule un tableau de 20 millions d'entiers (environ 80 Mo)
+   - Crée et manipule une matrice 2D de 2000x2000
+   - Crée et manipule une liste d'un million d'objets String
+   - **Objectif**: Évaluer la gestion de la mémoire, l'allocation et la vitesse d'accès
+
+3. **Test Concurrence**
+   - Exécute plusieurs tâches en parallèle sur plusieurs threads
+   - Calcule des nombres premiers dans différentes plages
+   - Effectue des multiplications de matrices
+   - Manipule des collections concurrentes (ConcurrentHashMap)
+   - **Objectif**: Évaluer les performances multi-thread et la gestion de la concurrence
+
+### Métriques Mesurées
+
+Pour chaque test, les métriques suivantes sont mesurées et affichées:
+
+- **Temps d'exécution**: Durée totale du test en millisecondes
+- **Mémoire utilisée**: Quantité de mémoire consommée par le test en Mo
+- **Processeurs disponibles**: Nombre de processeurs/cœurs détectés
+- **Threads utilisés**: Nombre de threads utilisés pour le test
+- **Informations supplémentaires**: Détails spécifiques sur les opérations effectuées
+
+### Informations Système
+
+La page affiche également des informations détaillées sur votre environnement:
+
+- Nombre de processeurs disponibles
+- Mémoire maximale allouée à la JVM
+- Mémoire totale et libre
+- Version Java et fournisseur
+- Système d'exploitation
+
+### Utilisation des Tests de Performance
+
+Ces tests peuvent être utilisés pour:
+
+1. **Comparer différentes versions de JDK**: Évaluer les améliorations de performance entre Java 8 et des versions plus récentes
+2. **Optimiser les configurations**: Tester l'impact des paramètres JVM sur les performances
+3. **Évaluer le matériel**: Comparer les performances sur différentes configurations matérielles
+4. **Diagnostiquer des problèmes**: Identifier des goulots d'étranglement potentiels dans votre environnement
+
+### Interprétation des Résultats
+
+- **Test CPU**: Des temps d'exécution plus courts indiquent de meilleures performances de calcul
+- **Test Mémoire**: Une utilisation mémoire efficace et des temps d'accès rapides sont préférables
+- **Test Concurrence**: Des temps d'exécution plus courts avec un nombre élevé de threads indiquent une bonne gestion de la concurrence
+
 ## Personnalisation du logo
 
 Le logo de l'application est stocké dans le répertoire `/src/main/resources/static/images/Acloud.png`. Pour changer le logo :
