@@ -1,6 +1,7 @@
 package com.example.app.controllers;
 
 import com.example.app.models.PerformanceTestResult;
+import com.example.app.services.JavaScriptService;
 import com.example.app.services.PerformanceTestService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class PerformanceControllerTest {
 
     @MockBean
     private PerformanceTestService performanceTestService;
+    
+    @MockBean
+    private JavaScriptService javaScriptService;
 
     @Test
     public void testRunCpuTest() throws Exception {
