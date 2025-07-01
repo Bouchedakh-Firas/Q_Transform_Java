@@ -134,12 +134,36 @@ L'application sera disponible à l'adresse http://localhost:8080
   - En cas d'erreur, renvoie un message d'erreur détaillé avec le code d'état HTTP approprié
   - Note : La recherche est limitée à un rayon de 1 km autour de l'adresse spécifiée.
 
+- `GET /api/performance/cpu` - Exécute un test de performance CPU
+  - Exemple de réponse : `{"testType":"CPU","executionTimeMs":1234,"memoryUsedBytes":5678901,"cpuCount":8,"threadCount":1,"additionalInfo":"Found 123456 prime numbers up to 2000000, Fibonacci(40)=102334155, Factorial(20)=2432902008176640000"}`
+
+- `GET /api/performance/memory` - Exécute un test de performance mémoire
+  - Exemple de réponse : `{"testType":"Memory","executionTimeMs":2345,"memoryUsedBytes":87654321,"cpuCount":8,"threadCount":1,"additionalInfo":"Allocated and processed array of 20000000 integers, sum: 9876543, Matrix sum: 200000000, List size: 1000000"}`
+
+- `GET /api/performance/concurrency` - Exécute un test de performance concurrence
+  - Exemple de réponse : `{"testType":"Concurrency","executionTimeMs":3456,"memoryUsedBytes":12345678,"cpuCount":8,"threadCount":16,"additionalInfo":"Found 123456 prime numbers, Matrix sum: 9876543, String operations: 50000, Map entries: 100000, Using 16 threads"}`
+
+- `GET /api/performance/xml` - Exécute un test de performance XML avec JAXB
+  - Exemple de réponse : `{"testType":"XML","executionTimeMs":1234,"memoryUsedBytes":5678901,"cpuCount":8,"threadCount":1,"additionalInfo":"Processed 1000 XML operations with 100 items each, successful operations: 1000"}`
+
+- `GET /api/performance/corba` - Exécute un test de performance CORBA
+  - Exemple de réponse : `{"testType":"CORBA","executionTimeMs":2345,"memoryUsedBytes":6789012,"cpuCount":8,"threadCount":1,"additionalInfo":"Processed 100 CORBA operations with 50 data points each, successful operations: 100"}`
+
+- `GET /api/xml/sample` - Génère un exemple de document XML
+  - Exemple de réponse : Document XML formaté
+
+- `POST /api/xml/parse` - Parse un document XML et renvoie l'objet Java correspondant
+  - Corps de la requête : Document XML à parser
+  - Exemple de réponse : `{"id":"123e4567-e89b-12d3-a456-426614174000","name":"Test Data 123e4567","description":"Sample test data for XML processing","creationDate":"2023-06-15T10:30:45","properties":[{"key":"version","value":"1.0"},...],"items":[{"itemId":"item-1","itemName":"First Item","quantity":10},...]}`
+
 ## Pages Web
 
 - `/` - Page d'accueil avec le titre "Acloud Quarter" et le logo
 - `/joke` - Page du générateur de blagues aléatoires
 - `/signature` - Page du générateur de signatures email
 - `/restaurant` - Page du trouveur de restaurant aléatoire avec fonctionnalité de test de l'API
+- `/performance` - Page des tests de performance
+- `/xml` - Page de test des fonctionnalités XML (JAXB)
 
 ## Test de l'API Restaurant
 
@@ -178,6 +202,18 @@ La page `/performance` offre une suite complète de tests pour évaluer les perf
    - Effectue des multiplications de matrices
    - Manipule des collections concurrentes (ConcurrentHashMap)
    - **Objectif**: Évaluer les performances multi-thread et la gestion de la concurrence
+
+4. **Test XML**
+   - Utilise JAXB pour marshaller et unmarshaller des objets XML
+   - Traite des documents XML complexes avec des éléments imbriqués
+   - Effectue des opérations de validation XML
+   - **Objectif**: Évaluer les performances de traitement XML avec JAXB (inclus dans Java 8, supprimé dans Java 11+)
+
+5. **Test CORBA**
+   - Simule des opérations CORBA (Common Object Request Broker Architecture)
+   - Initialise un ORB (Object Request Broker)
+   - Effectue des opérations de sérialisation/désérialisation d'objets
+   - **Objectif**: Évaluer les performances de CORBA (inclus dans Java 8, supprimé dans Java 11+)
 
 ### Métriques Mesurées
 
@@ -236,3 +272,37 @@ L'application est actuellement disponible en français. Les éléments suivants 
 - Interface utilisateur des pages web
 - Messages de l'API
 - Contenu des blagues
+
+## Fonctionnalités Java 8 non supportées dans Java 17
+
+Cette application démontre plusieurs fonctionnalités et APIs qui étaient incluses dans Java 8 mais qui ont été supprimées ou dépréciées dans les versions ultérieures de Java, notamment Java 17 :
+
+1. **Nashorn JavaScript Engine**
+   - Inclus dans Java 8 via `javax.script` et `jdk.nashorn.*`
+   - Déprécié dans Java 11 et supprimé dans Java 17
+   - Utilisé dans l'application pour exécuter du code JavaScript côté serveur
+   - Voir `JavaScriptService.java` pour l'implémentation
+
+2. **JAXB (Java Architecture for XML Binding)**
+   - Inclus dans Java 8 via `javax.xml.bind.*`
+   - Supprimé du JDK standard dans Java 11+
+   - Utilisé dans l'application pour le marshalling/unmarshalling XML
+   - Voir `XmlProcessingService.java` et `XmlTestData.java` pour l'implémentation
+
+3. **CORBA (Common Object Request Broker Architecture)**
+   - Inclus dans Java 8 via `org.omg.*`
+   - Supprimé du JDK standard dans Java 11+
+   - Utilisé dans l'application pour démontrer les fonctionnalités de communication distribuée
+   - Voir `CorbaService.java` et `CorbaTestData.java` pour l'implémentation
+
+4. **Java Activation Framework (JAF)**
+   - Inclus dans Java 8 via `javax.activation.*`
+   - Supprimé du JDK standard dans Java 11+
+   - Utilisé indirectement par JAXB dans l'application
+
+5. **Java Transaction API (JTA)**
+   - Inclus dans Java 8 via `javax.transaction.*`
+   - Supprimé du JDK standard dans Java 11+
+   - Ajouté comme dépendance pour démontrer la compatibilité
+
+Ces fonctionnalités sont maintenant disponibles sous forme de dépendances externes pour les applications Java 11+ qui en ont besoin, mais elles ne font plus partie du JDK standard.
