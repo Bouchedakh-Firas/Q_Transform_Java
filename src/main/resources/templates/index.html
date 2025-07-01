@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acloud Quarter</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -13,10 +14,11 @@
         <p>Bienvenue sur la page d'accueil de notre application web Java 8.</p>
         
         <button class="img-button" onclick="fetchWelcomeMessage()">
-            <!-- Replace with actual PNG image when available -->
-            <img src="/images/buttons/welcome_button.png" alt="Récupérer le message de bienvenue" 
-                 onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Récupérer le message de bienvenue';">
-            <span>Récupérer le message de bienvenue</span>
+            <!-- Using web icon instead of local image -->
+            <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                <i class="material-icons" style="font-size: 48px; color: white;">message</i>
+                <span style="color: white; margin-top: 10px; font-weight: bold;">Récupérer le message de bienvenue</span>
+            </div>
         </button>
         
         <div id="message">
@@ -31,28 +33,32 @@
             
             <div class="feature-buttons">
                 <button class="img-button" onclick="window.location.href='/joke'">
-                    <!-- Replace with actual PNG image when available -->
-                    <img src="/images/buttons/joke_button.png" alt="Générateur de blagues" 
-                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Générateur de blagues';">
-                    <span>Générateur de blagues</span>
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">sentiment_very_satisfied</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Générateur de blagues</span>
+                    </div>
                 </button>
                 <button class="img-button" onclick="window.location.href='/performance'">
-                    <!-- Replace with actual PNG image when available -->
-                    <img src="/images/buttons/performance_button.png" alt="Tests de performance" 
-                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Tests de performance';">
-                    <span>Tests de performance</span>
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">speed</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Tests de performance</span>
+                    </div>
                 </button>
                 <button class="img-button" onclick="window.location.href='/restaurant'">
-                    <!-- Replace with actual PNG image when available -->
-                    <img src="/images/buttons/restaurant_button.png" alt="Trouveur de restaurant" 
-                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Trouveur de restaurant';">
-                    <span>Trouveur de restaurant</span>
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">restaurant</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Trouveur de restaurant</span>
+                    </div>
                 </button>
                 <button class="img-button" onclick="window.location.href='/signature'">
-                    <!-- Replace with actual PNG image when available -->
-                    <img src="/images/buttons/signature_button.png" alt="Générateur de signature" 
-                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Générateur de signature';">
-                    <span>Générateur de signature</span>
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">email</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Générateur de signature</span>
+                    </div>
                 </button>
             </div>
         </div>
@@ -60,10 +66,11 @@
         <div class="feature-section">
             <h2>Informations sur l'environnement Java</h2>
             <button class="img-button" onclick="fetchJavaVersion()">
-                <!-- Replace with actual PNG image when available -->
-                <img src="/images/buttons/java_info_button.png" alt="Afficher la version Java" 
-                     onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Afficher la version Java';">
-                <span>Afficher la version Java</span>
+                <!-- Using web icon instead of local image -->
+                <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                    <i class="material-icons" style="font-size: 48px; color: white;">code</i>
+                    <span style="color: white; margin-top: 10px; font-weight: bold;">Afficher la version Java</span>
+                </div>
             </button>
             
             <div id="java-info" style="margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 4px; display: none;">

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tests de Performance - Acloud Quarter</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         .test-section {
             margin-top: 20px;
@@ -95,10 +96,11 @@
         <div class="system-info">
             <h2>Informations Système</h2>
             <button class="img-button" onclick="fetchSystemInfo()">
-                <!-- Replace with actual PNG image when available -->
-                <img src="/images/buttons/system_info_button.png" alt="Afficher les informations système" 
-                     onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Afficher les informations système';">
-                <span>Afficher les informations système</span>
+                <!-- Using web icon instead of local image -->
+                <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                    <i class="material-icons" style="font-size: 48px; color: white;">info</i>
+                    <span style="color: white; margin-top: 10px; font-weight: bold;">Afficher les informations système</span>
+                </div>
             </button>
             <div id="system-info-results" class="results">
                 <div class="result-item">
@@ -138,28 +140,32 @@
             
             <div class="test-buttons">
                 <button class="img-button" id="cpu-test-btn" onclick="runPerformanceTest('cpu')">
-                    <!-- Replace with actual PNG image when available -->
-                    <img src="/images/buttons/cpu_test_button.png" alt="Test CPU" 
-                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Test CPU';">
-                    <span>Test CPU</span>
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">memory</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Test CPU</span>
+                    </div>
                 </button>
                 <button class="img-button" id="memory-test-btn" onclick="runPerformanceTest('memory')">
-                    <!-- Replace with actual PNG image when available -->
-                    <img src="/images/buttons/memory_test_button.png" alt="Test Mémoire" 
-                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Test Mémoire';">
-                    <span>Test Mémoire</span>
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">storage</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Test Mémoire</span>
+                    </div>
                 </button>
                 <button class="img-button" id="concurrency-test-btn" onclick="runPerformanceTest('concurrency')">
-                    <!-- Replace with actual PNG image when available -->
-                    <img src="/images/buttons/concurrency_test_button.png" alt="Test Concurrence" 
-                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Test Concurrence';">
-                    <span>Test Concurrence</span>
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">swap_horiz</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Test Concurrence</span>
+                    </div>
                 </button>
                 <button class="img-button" id="all-tests-btn" onclick="runAllTests()">
-                    <!-- Replace with actual PNG image when available -->
-                    <img src="/images/buttons/all_tests_button.png" alt="Exécuter tous les tests" 
-                         onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Exécuter tous les tests';">
-                    <span>Exécuter tous les tests</span>
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">playlist_add_check</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Exécuter tous les tests</span>
+                    </div>
                 </button>
             </div>
             
@@ -191,10 +197,11 @@
         
         <div class="nav-buttons">
             <button class="img-button" onclick="window.location.href='/'">
-                <!-- Replace with actual PNG image when available -->
-                <img src="/images/buttons/home_button.png" alt="Retour à l'accueil" 
-                     onerror="this.onerror=null; this.src=''; this.style.backgroundColor='#f8485e'; this.style.padding='10px'; this.style.color='#ffffff'; this.textContent='Retour à l\'accueil';">
-                <span>Retour à l'accueil</span>
+                <!-- Using web icon instead of local image -->
+                <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                    <i class="material-icons" style="font-size: 48px; color: white;">home</i>
+                    <span style="color: white; margin-top: 10px; font-weight: bold;">Retour à l'accueil</span>
+                </div>
             </button>
         </div>
     </div>
