@@ -160,4 +160,17 @@ button:hover {
 .img-button img {
     width: 150px;
     height: auto;
+/* Web icon styles */
+.web-icon {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.img-button:hover .web-icon {
+    transform: translateY(-5px);
+    background-color: var(--dark-grey) !important;
+}
+
+.material-icons {
+    user-select: none;
 }
