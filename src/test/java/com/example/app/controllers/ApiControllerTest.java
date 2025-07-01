@@ -5,6 +5,7 @@ import com.example.app.models.JavaVersion;
 import com.example.app.models.Joke;
 import com.example.app.models.Message;
 import com.example.app.models.Restaurant;
+import com.example.app.services.JavaScriptService;
 import com.example.app.services.JokeService;
 import com.example.app.services.RestaurantService;
 import com.example.app.services.SignatureService;
@@ -40,6 +41,9 @@ public class ApiControllerTest {
 
     @MockBean
     private RestaurantService restaurantService;
+    
+    @MockBean
+    private JavaScriptService javaScriptService;
 
     @Test
     public void welcomeMessageShouldReturnDefaultMessage() throws Exception {
