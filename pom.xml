@@ -48,12 +48,8 @@
             <version>2.1.2</version>
         </dependency>
         
-        <!-- Nashorn JavaScript Engine (included in Java 8, removed in Java 17) -->
-        <dependency>
-            <groupId>org.openjdk.nashorn</groupId>
-            <artifactId>nashorn-core</artifactId>
-            <version>15.4</version>
-        </dependency>
+        <!-- Nashorn JavaScript Engine is included in Java 8, no external dependency needed -->
+        <!-- The external nashorn-core dependency was removed as it's incompatible with Java 8 -->
         
         <!-- JAXB API (included in Java 8, removed in Java 11+) -->
         <dependency>

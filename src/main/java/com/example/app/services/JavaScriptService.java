@@ -12,7 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Service for executing JavaScript code using the Nashorn engine.
- * This demonstrates using a Java 8 feature (Nashorn) that was removed in Java 17.
+ * This uses Java 8's built-in Nashorn engine without requiring any external dependencies.
+ * Note: Nashorn was deprecated in Java 11 and removed in Java 17.
  */
 @Service
 public class JavaScriptService {
@@ -22,7 +23,9 @@ public class JavaScriptService {
 
     public JavaScriptService() {
         // Create a Nashorn script engine
-        // In Java 8, this was built-in, but in Java 17 it requires the external dependency
+        // Using Java 8's built-in Nashorn engine (no external dependency needed)
+        // Note: In Java 11+, Nashorn was deprecated and in Java 17 it was removed,
+        // requiring an external dependency for those versions
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
         this.engine = scriptEngineManager.getEngineByName("nashorn");
         logger.info("Initialized Nashorn JavaScript engine: {}", engine != null);
