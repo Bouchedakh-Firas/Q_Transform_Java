@@ -176,7 +176,7 @@ public class ApiController {
     
     /**
      * API endpoint for executing JavaScript code using the Nashorn engine.
-     * This demonstrates using a Java 8 feature (Nashorn) that was removed in Java 17.
+     * This uses Java 8's built-in Nashorn engine.
      * 
      * @param script The JavaScript code to execute
      * @return A JavaScriptResult object containing the execution result
