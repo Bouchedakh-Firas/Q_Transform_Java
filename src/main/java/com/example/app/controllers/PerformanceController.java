@@ -1,6 +1,8 @@
 package com.example.app.controllers;
 
+import com.example.app.models.JavaScriptResult;
 import com.example.app.models.PerformanceTestResult;
+import com.example.app.services.JavaScriptService;
 import com.example.app.services.PerformanceTestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +24,12 @@ public class PerformanceController {
 
     private static final Logger logger = LoggerFactory.getLogger(PerformanceController.class);
     private final PerformanceTestService performanceTestService;
+    private final JavaScriptService javaScriptService;
 
     @Autowired
-    public PerformanceController(PerformanceTestService performanceTestService) {
+    public PerformanceController(PerformanceTestService performanceTestService, JavaScriptService javaScriptService) {
         this.performanceTestService = performanceTestService;
+        this.javaScriptService = javaScriptService;
     }
 
     /**
@@ -86,5 +90,57 @@ public class PerformanceController {
         systemInfo.put("osVersion", System.getProperty("os.version"));
         
         return ResponseEntity.ok(systemInfo);
+    }
+    
+    /**
+     * API endpoint for running a JavaScript performance test.
+     * This demonstrates using a Java 8 feature (Nashorn) that was removed in Java 17.
+     * 
+     * @return A PerformanceTestResult object with test metrics
+     */
+    @GetMapping("/javascript")
+    public ResponseEntity<PerformanceTestResult> runJavaScriptTest() {
+        logger.info("API request received for JavaScript performance test");
+        
+        // Get initial memory usage
+        Runtime runtime = Runtime.getRuntime();
+        long startMemory = runtime.totalMemory() - runtime.freeMemory();
+        
+        // Start timing
+        long startTime = System.currentTimeMillis();
+        
+        // Run JavaScript performance test
+        JavaScriptResult jsResult = javaScriptService.runPerformanceTest();
+        
+        // End timing
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        
+        // Get final memory usage
+        long endMemory = runtime.totalMemory() - runtime.freeMemory();
+        long memoryUsed = endMemory - startMemory;
+        
+        // Get CPU count
+        int cpuCount = runtime.availableProcessors();
+        
+        // Create result
+        String additionalInfo = "JavaScript engine: Nashorn, ";
+        if (jsResult.isSuccess()) {
+            additionalInfo += "Test completed successfully, Result: " + jsResult.getResult();
+        } else {
+            additionalInfo += "Test failed: " + jsResult.getErrorMessage();
+        }
+        
+        PerformanceTestResult result = new PerformanceTestResult(
+            "JavaScript",
+            executionTime,
+            memoryUsed,
+            cpuCount,
+            1, // Single thread for JavaScript test
+            additionalInfo
+        );
+        
+        logger.info("JavaScript test completed in {} ms", executionTime);
+        return ResponseEntity.ok(result);
     }
 }

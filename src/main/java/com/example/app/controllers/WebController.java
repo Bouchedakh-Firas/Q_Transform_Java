@@ -53,4 +53,13 @@ public class WebController {
     public String performance() {
         return "performance";
     }
+    
+    /**
+     * Serves the JavaScript test page.
+     * @return The name of the view template to render.
+     */
+    @GetMapping("/javascript")
+    public String javascript() {
+        return "javascript";
+    }
 }

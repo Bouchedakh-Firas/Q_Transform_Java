@@ -1,10 +1,12 @@
 package com.example.app.controllers;
 
 import com.example.app.models.EmailSignature;
+import com.example.app.models.JavaScriptResult;
 import com.example.app.models.JavaVersion;
 import com.example.app.models.Joke;
 import com.example.app.models.Message;
 import com.example.app.models.Restaurant;
+import com.example.app.services.JavaScriptService;
 import com.example.app.services.JokeService;
 import com.example.app.services.RestaurantService;
 import com.example.app.services.SignatureService;
@@ -34,12 +36,14 @@ public class ApiController {
     private final JokeService jokeService;
     private final SignatureService signatureService;
     private final RestaurantService restaurantService;
+    private final JavaScriptService javaScriptService;
 
     @Autowired
-    public ApiController(JokeService jokeService, SignatureService signatureService, RestaurantService restaurantService) {
+    public ApiController(JokeService jokeService, SignatureService signatureService, RestaurantService restaurantService, JavaScriptService javaScriptService) {
         this.jokeService = jokeService;
         this.signatureService = signatureService;
         this.restaurantService = restaurantService;
+        this.javaScriptService = javaScriptService;
     }
 
     /**
@@ -168,5 +172,35 @@ public class ApiController {
             System.getProperty("java.runtime.name")
         );
         return ResponseEntity.ok(javaVersion);
+    }
+    
+    /**
+     * API endpoint for executing JavaScript code using the Nashorn engine.
+     * This demonstrates using a Java 8 feature (Nashorn) that was removed in Java 17.
+     * 
+     * @param script The JavaScript code to execute
+     * @return A JavaScriptResult object containing the execution result
+     */
+    @PostMapping("/javascript/execute")
+    public ResponseEntity<JavaScriptResult> executeJavaScript(@RequestParam String script) {
+        logger.info("Executing JavaScript: {}", script);
+        JavaScriptResult result = javaScriptService.executeScript(script);
+        return ResponseEntity.ok(result);
+    }
+    
+    /**
+     * API endpoint for executing JavaScript code with a timeout.
+     * 
+     * @param script The JavaScript code to execute
+     * @param timeout Maximum execution time in seconds
+     * @return A JavaScriptResult object containing the execution result
+     */
+    @PostMapping("/javascript/execute-with-timeout")
+    public ResponseEntity<JavaScriptResult> executeJavaScriptWithTimeout(
+            @RequestParam String script,
+            @RequestParam(defaultValue = "5") int timeout) {
+        logger.info("Executing JavaScript with {} second timeout: {}", timeout, script);
+        JavaScriptResult result = javaScriptService.executeScriptWithTimeout(script, timeout);
+        return ResponseEntity.ok(result);
     }
 }
