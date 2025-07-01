@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test XML - Acloud Quarter</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .test-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+        }
+        .test-buttons {
+            margin-bottom: 20px;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            display: none;
+        }
+        .result-item {
+            margin-bottom: 10px;
+        }
+        .result-label {
+            font-weight: bold;
+            color: var(--dark-grey);
+        }
+        .xml-display {
+            font-family: monospace;
+            white-space: pre;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .nav-buttons {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .error {
+            color: var(--red-poppy);
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test XML</h1>
+        <p>Cette page vous permet de tester les fonctionnalités de traitement XML utilisant JAXB (Java Architecture for XML Binding).</p>
+        <p>JAXB était inclus dans Java 8 mais a été supprimé dans Java 11+.</p>
+        
+        <div class="test-section">
+            <h2>Génération et Traitement XML</h2>
+            <p>Cliquez sur les boutons ci-dessous pour tester les fonctionnalités XML:</p>
+            
+            <div class="test-buttons">
+                <button class="img-button" id="generate-xml-btn" onclick="generateSampleXml()">
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">code</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Générer XML</span>
+                    </div>
+                </button>
+                <button class="img-button" id="parse-xml-btn" onclick="parseXml()" disabled>
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">find_in_page</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Parser XML</span>
+                    </div>
+                </button>
+                <button class="img-button" id="run-test-btn" onclick="runXmlTest()">
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">speed</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Test Performance</span>
+                    </div>
+                </button>
+            </div>
+            
+            <div id="error-message" class="error"></div>
+            
+            <div id="xml-results" class="results">
+                <h3>XML Généré</h3>
+                <div id="xml-content" class="xml-display"></div>
+            </div>
+            
+            <div id="parse-results" class="results">
+                <h3>Résultat du Parsing</h3>
+                <div class="result-item">
+                    <span class="result-label">ID:</span> 
+                    <span id="parsed-id">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Nom:</span> 
+                    <span id="parsed-name">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Description:</span> 
+                    <span id="parsed-description">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Date de création:</span> 
+                    <span id="parsed-date">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Nombre de propriétés:</span> 
+                    <span id="parsed-properties">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Nombre d'éléments:</span> 
+                    <span id="parsed-items">-</span>
+                </div>
+            </div>
+            
+            <div id="test-results" class="results">
+                <h3>Résultats du Test de Performance</h3>
+                <div class="result-item">
+                    <span class="result-label">Temps d'exécution:</span> 
+                    <span id="test-time">-</span> ms
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Mémoire utilisée:</span> 
+                    <span id="test-memory">-</span> MB
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Informations supplémentaires:</span> 
+                    <span id="test-info">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="img-button" onclick="window.location.href='/'">
+                <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                    <i class="material-icons" style="font-size: 48px; color: white;">home</i>
+                    <span style="color: white; margin-top: 10px; font-weight: bold;">Retour à l'accueil</span>
+                </div>
+            </button>
+            <button class="img-button" onclick="window.location.href='/performance'">
+                <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                    <i class="material-icons" style="font-size: 48px; color: white;">speed</i>
+                    <span style="color: white; margin-top: 10px; font-weight: bold;">Tests de Performance</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Store generated XML
+        let generatedXml = null;
+        
+        // Format bytes to MB
+        function formatBytes(bytes) {
+            return (bytes / (1024 * 1024)).toFixed(2);
+        }
+        
+        // Generate sample XML
+        function generateSampleXml() {
+            // Hide error message
+            hideError();
+            
+            // Make API call to generate sample XML
+            fetch('/api/xml/sample')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur HTTP: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(xml => {
+                    // Store generated XML
+                    generatedXml = xml;
+                    
+                    // Display XML
+                    const xmlContent = document.getElementById('xml-content');
+                    xmlContent.textContent = xml;
+                    
+                    // Show results
+                    document.getElementById('xml-results').style.display = 'block';
+                    
+                    // Enable parse button
+                    document.getElementById('parse-xml-btn').disabled = false;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la génération XML:', error);
+                    showError(`Erreur lors de la génération XML: ${error.message}`);
+                });
+        }
+        
+        // Parse XML
+        function parseXml() {
+            // Hide error message
+            hideError();
+            
+            // Check if XML is generated
+            if (!generatedXml) {
+                showError('Veuillez d\'abord générer un XML.');
+                return;
+            }
+            
+            // Make API call to parse XML
+            fetch('/api/xml/parse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: generatedXml
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Display parsed data
+                    document.getElementById('parsed-id').textContent = data.id;
+                    document.getElementById('parsed-name').textContent = data.name;
+                    document.getElementById('parsed-description').textContent = data.description;
+                    document.getElementById('parsed-date').textContent = data.creationDate;
+                    document.getElementById('parsed-properties').textContent = data.properties ? data.properties.length : 0;
+                    document.getElementById('parsed-items').textContent = data.items ? data.items.length : 0;
+                    
+                    // Show results
+                    document.getElementById('parse-results').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Erreur lors du parsing XML:', error);
+                    showError(`Erreur lors du parsing XML: ${error.message}`);
+                });
+        }
+        
+        // Run XML performance test
+        function runXmlTest() {
+            // Hide error message
+            hideError();
+            
+            // Make API call to run XML performance test
+            fetch('/api/performance/xml')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Display test results
+                    document.getElementById('test-time').textContent = data.executionTimeMs;
+                    document.getElementById('test-memory').textContent = formatBytes(data.memoryUsedBytes);
+                    document.getElementById('test-info').textContent = data.additionalInfo;
+                    
+                    // Show results
+                    document.getElementById('test-results').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Erreur lors du test de performance XML:', error);
+                    showError(`Erreur lors du test de performance XML: ${error.message}`);
+                });
+        }
+        
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        // Hide error message
+        function hideError() {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -160,6 +160,20 @@
                         <span style="color: white; margin-top: 10px; font-weight: bold;">Test Concurrence</span>
                     </div>
                 </button>
+                <button class="img-button" id="xml-test-btn" onclick="runPerformanceTest('xml')">
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">code</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Test XML</span>
+                    </div>
+                </button>
+                <button class="img-button" id="corba-test-btn" onclick="runPerformanceTest('corba')">
+                    <!-- Using web icon instead of local image -->
+                    <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
+                        <i class="material-icons" style="font-size: 48px; color: white;">share</i>
+                        <span style="color: white; margin-top: 10px; font-weight: bold;">Test CORBA</span>
+                    </div>
+                </button>
                 <button class="img-button" id="all-tests-btn" onclick="runAllTests()">
                     <!-- Using web icon instead of local image -->
                     <div class="web-icon" style="background-color: #f8485e; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px;">
@@ -211,7 +225,9 @@
         const testResults = {
             cpu: null,
             memory: null,
-            concurrency: null
+            concurrency: null,
+            xml: null,
+            corba: null
         };
         
         // Track running tests
@@ -346,6 +362,20 @@
                     setTimeout(() => {
                         if (runningTests === 0) {
                             runPerformanceTest('concurrency');
+                            
+                            // Wait for concurrency test to complete, then run XML test
+                            setTimeout(() => {
+                                if (runningTests === 0) {
+                                    runPerformanceTest('xml');
+                                    
+                                    // Wait for XML test to complete, then run CORBA test
+                                    setTimeout(() => {
+                                        if (runningTests === 0) {
+                                            runPerformanceTest('corba');
+                                        }
+                                    }, 1000);
+                                }
+                            }, 1000);
                         }
                     }, 1000);
                 }
@@ -390,6 +420,8 @@
             document.getElementById('cpu-test-btn').disabled = !enabled;
             document.getElementById('memory-test-btn').disabled = !enabled;
             document.getElementById('concurrency-test-btn').disabled = !enabled;
+            document.getElementById('xml-test-btn').disabled = !enabled;
+            document.getElementById('corba-test-btn').disabled = !enabled;
             document.getElementById('all-tests-btn').disabled = !enabled;
         }
         
