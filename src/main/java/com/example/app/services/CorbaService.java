@@ -151,7 +151,7 @@ public class CorbaService {
                     try {
                         NameComponent[] name = nameService.to_name("TestObject" + i);
                         // In a real application, we would look up actual CORBA objects here
-                    } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName e) {
+                    } catch (org.omg.CosNaming.NamingContextPackage.InvalidName e) {
                         logger.debug("Expected exception in test: {}", e.getMessage());
                     }
                 }
