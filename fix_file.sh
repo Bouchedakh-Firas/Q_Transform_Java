@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Remove the last line (extra closing brace)
-sed -i '$ d' /workspace/src/main/java/com/example/app/services/PerformanceTestService.java
+sed -i '$ d' /src/main/java/com/example/app/services/PerformanceTestService.java
 
 # Add the missing methods
-cat << 'EOF' >> /workspace/src/main/java/com/example/app/services/PerformanceTestService.java
+cat << 'EOF' >> /src/main/java/com/example/app/services/PerformanceTestService.java
     
     /**
      * Multiply two matrices of the specified size and return the sum of all elements in the result.

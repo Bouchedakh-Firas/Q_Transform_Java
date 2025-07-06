@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Append the missing methods and closing brace to the file
-cat << 'EOF' >> /workspace/src/main/java/com/example/app/services/PerformanceTestService.java
+cat << 'EOF' >> /src/main/java/com/example/app/services/PerformanceTestService.java
     
     /**
      * Multiply two matrices of the specified size and return the sum of all elements in the result.

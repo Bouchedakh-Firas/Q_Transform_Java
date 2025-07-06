@@ -12,7 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Service for executing JavaScript code using the Nashorn engine.
- * This uses Java 8's built-in Nashorn engine without requiring any external dependencies.
+ * This uses Java 8's built-in Nashorn engine without requiring any external
+ * dependencies.
  * Note: Nashorn was deprecated in Java 11 and removed in Java 17.
  */
 @Service
@@ -22,13 +23,13 @@ public class JavaScriptService {
     private final ScriptEngine engine;
 
     public JavaScriptService() {
-        // Create a Nashorn script engine
-        // Using Java 8's built-in Nashorn engine (no external dependency needed)
-        // Note: In Java 11+, Nashorn was deprecated and in Java 17 it was removed,
-        // requiring an external dependency for those versions
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        this.engine = scriptEngineManager.getEngineByName("nashorn");
-        logger.info("Initialized Nashorn JavaScript engine: {}", engine != null);
+        // Initialize the ScriptEngine
+        ScriptEngineManager manager = new ScriptEngineManager();
+        this.engine = manager.getEngineByName("JavaScript");
+        if (this.engine == null) {
+            throw new IllegalStateException("JavaScript engine not available");
+        }
+        logger.info("Initialized JavaScript engine: {}", engine != null);
     }
 
     /**
@@ -39,40 +40,41 @@ public class JavaScriptService {
      */
     public JavaScriptResult executeScript(String script) {
         logger.info("Executing JavaScript script: {}", script);
-        
+
         long startTime = System.currentTimeMillis();
-        
+
         try {
             Object result = engine.eval(script);
             long executionTime = System.currentTimeMillis() - startTime;
-            
+
             logger.info("Script executed successfully in {} ms", executionTime);
             return new JavaScriptResult(script, result, executionTime, true, null);
         } catch (ScriptException e) {
             long executionTime = System.currentTimeMillis() - startTime;
-            
+
             logger.error("Error executing script: {}", e.getMessage(), e);
             return new JavaScriptResult(script, null, executionTime, false, e.getMessage());
         }
     }
 
     /**
-     * Run a JavaScript performance test by executing a complex script multiple times.
+     * Run a JavaScript performance test by executing a complex script multiple
+     * times.
      *
      * @return A JavaScriptResult object containing the execution result
      */
     public JavaScriptResult runPerformanceTest() {
         logger.info("Running JavaScript performance test");
-        
+
         // Create a complex JavaScript script for performance testing
         StringBuilder scriptBuilder = new StringBuilder();
-        
+
         // Add function to calculate Fibonacci numbers
         scriptBuilder.append("function fibonacci(n) {\n");
         scriptBuilder.append("  if (n <= 1) return n;\n");
         scriptBuilder.append("  return fibonacci(n-1) + fibonacci(n-2);\n");
         scriptBuilder.append("}\n\n");
-        
+
         // Add function to check if a number is prime
         scriptBuilder.append("function isPrime(n) {\n");
         scriptBuilder.append("  if (n <= 1) return false;\n");
@@ -83,7 +85,7 @@ public class JavaScriptService {
         scriptBuilder.append("  }\n");
         scriptBuilder.append("  return true;\n");
         scriptBuilder.append("}\n\n");
-        
+
         // Add function to sort an array
         scriptBuilder.append("function bubbleSort(arr) {\n");
         scriptBuilder.append("  const n = arr.length;\n");
@@ -98,11 +100,11 @@ public class JavaScriptService {
         scriptBuilder.append("  }\n");
         scriptBuilder.append("  return arr;\n");
         scriptBuilder.append("}\n\n");
-        
+
         // Add test execution code
         scriptBuilder.append("// Performance test execution\n");
         scriptBuilder.append("const results = {};\n\n");
-        
+
         // Test 1: Calculate Fibonacci numbers
         scriptBuilder.append("// Test 1: Fibonacci calculation\n");
         scriptBuilder.append("const fibStart = new Date().getTime();\n");
@@ -113,7 +115,7 @@ public class JavaScriptService {
         scriptBuilder.append("const fibEnd = new Date().getTime();\n");
         scriptBuilder.append("results.fibonacciTime = fibEnd - fibStart;\n");
         scriptBuilder.append("results.fibonacciResults = fibResults;\n\n");
-        
+
         // Test 2: Find prime numbers
         scriptBuilder.append("// Test 2: Prime number calculation\n");
         scriptBuilder.append("const primeStart = new Date().getTime();\n");
@@ -126,7 +128,7 @@ public class JavaScriptService {
         scriptBuilder.append("const primeEnd = new Date().getTime();\n");
         scriptBuilder.append("results.primeTime = primeEnd - primeStart;\n");
         scriptBuilder.append("results.primeCount = primes.length;\n\n");
-        
+
         // Test 3: Array sorting
         scriptBuilder.append("// Test 3: Array sorting\n");
         scriptBuilder.append("const sortStart = new Date().getTime();\n");
@@ -141,7 +143,7 @@ public class JavaScriptService {
         scriptBuilder.append("const sortEnd = new Date().getTime();\n");
         scriptBuilder.append("results.sortTime = sortEnd - sortStart;\n");
         scriptBuilder.append("results.sortedArraysCount = arrays.length;\n\n");
-        
+
         // Test 4: String manipulation
         scriptBuilder.append("// Test 4: String manipulation\n");
         scriptBuilder.append("const strStart = new Date().getTime();\n");
@@ -159,12 +161,13 @@ public class JavaScriptService {
         scriptBuilder.append("results.stringTime = strEnd - strStart;\n");
         scriptBuilder.append("results.stringLength = longString.length;\n");
         scriptBuilder.append("results.wordsCount = splitWords.length;\n\n");
-        
+
         // Return results
         scriptBuilder.append("// Return overall results\n");
-        scriptBuilder.append("results.totalTime = results.fibonacciTime + results.primeTime + results.sortTime + results.stringTime;\n");
+        scriptBuilder.append(
+                "results.totalTime = results.fibonacciTime + results.primeTime + results.sortTime + results.stringTime;\n");
         scriptBuilder.append("results;\n");
-        
+
         String script = scriptBuilder.toString();
         return executeScript(script);
     }
@@ -172,19 +175,19 @@ public class JavaScriptService {
     /**
      * Execute a JavaScript script with a timeout.
      *
-     * @param script The JavaScript code to execute
+     * @param script         The JavaScript code to execute
      * @param timeoutSeconds Maximum execution time in seconds
      * @return A JavaScriptResult object containing the execution result
      */
     public JavaScriptResult executeScriptWithTimeout(String script, int timeoutSeconds) {
         logger.info("Executing JavaScript script with {} second timeout: {}", timeoutSeconds, script);
-        
+
         long startTime = System.currentTimeMillis();
-        
+
         // Create a thread to execute the script
         final Object[] resultHolder = new Object[1];
         final Exception[] exceptionHolder = new Exception[1];
-        
+
         Thread scriptThread = new Thread(() -> {
             try {
                 resultHolder[0] = engine.eval(script);
@@ -192,34 +195,35 @@ public class JavaScriptService {
                 exceptionHolder[0] = e;
             }
         });
-        
+
         // Start the thread and wait for it to complete
         scriptThread.start();
         try {
             scriptThread.join(TimeUnit.SECONDS.toMillis(timeoutSeconds));
-            
+
             // Check if the thread is still alive (timeout occurred)
             if (scriptThread.isAlive()) {
                 // Interrupt the thread (may not stop the script execution)
                 scriptThread.interrupt();
-                
+
                 long executionTime = System.currentTimeMillis() - startTime;
                 logger.error("Script execution timed out after {} ms", executionTime);
-                return new JavaScriptResult(script, null, executionTime, false, "Script execution timed out after " + timeoutSeconds + " seconds");
+                return new JavaScriptResult(script, null, executionTime, false,
+                        "Script execution timed out after " + timeoutSeconds + " seconds");
             }
-            
+
             // Check if an exception occurred
             if (exceptionHolder[0] != null) {
                 long executionTime = System.currentTimeMillis() - startTime;
                 logger.error("Error executing script: {}", exceptionHolder[0].getMessage(), exceptionHolder[0]);
                 return new JavaScriptResult(script, null, executionTime, false, exceptionHolder[0].getMessage());
             }
-            
+
             // Script executed successfully
             long executionTime = System.currentTimeMillis() - startTime;
             logger.info("Script executed successfully in {} ms", executionTime);
             return new JavaScriptResult(script, resultHolder[0], executionTime, true, null);
-            
+
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             long executionTime = System.currentTimeMillis() - startTime;
