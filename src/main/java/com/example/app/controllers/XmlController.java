@@ -50,7 +50,8 @@ public class XmlController {
             return ResponseEntity.ok(xml);
         } catch (JAXBException e) {
             logger.error("Error generating sample XML", e);
-            return ResponseEntity.internalServerError().body("<error>" + e.getMessage() + "</error>");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("<error>" + e.getMessage() + "</error>");
+
         }
     }
 
