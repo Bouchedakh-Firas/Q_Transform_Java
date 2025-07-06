@@ -62,4 +62,13 @@ public class WebController {
     public String javascript() {
         return "javascript";
     }
+    
+    /**
+     * Serves the XML test page.
+     * @return The name of the view template to render.
+     */
+    @GetMapping("/xml")
+    public String xml() {
+        return "xml";
+    }
 }

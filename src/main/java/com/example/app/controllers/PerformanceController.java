@@ -2,8 +2,10 @@ package com.example.app.controllers;
 
 import com.example.app.models.JavaScriptResult;
 import com.example.app.models.PerformanceTestResult;
+import com.example.app.services.CorbaService;
 import com.example.app.services.JavaScriptService;
 import com.example.app.services.PerformanceTestService;
+import com.example.app.services.XmlProcessingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,19 @@ public class PerformanceController {
     private static final Logger logger = LoggerFactory.getLogger(PerformanceController.class);
     private final PerformanceTestService performanceTestService;
     private final JavaScriptService javaScriptService;
+    private final XmlProcessingService xmlProcessingService;
+    private final CorbaService corbaService;
 
     @Autowired
-    public PerformanceController(PerformanceTestService performanceTestService, JavaScriptService javaScriptService) {
+    public PerformanceController(
+            PerformanceTestService performanceTestService, 
+            JavaScriptService javaScriptService,
+            XmlProcessingService xmlProcessingService,
+            CorbaService corbaService) {
         this.performanceTestService = performanceTestService;
         this.javaScriptService = javaScriptService;
+        this.xmlProcessingService = xmlProcessingService;
+        this.corbaService = corbaService;
     }
 
     /**
@@ -141,6 +151,32 @@ public class PerformanceController {
         );
         
         logger.info("JavaScript test completed in {} ms", executionTime);
+        return ResponseEntity.ok(result);
+    }
+    
+    /**
+     * API endpoint for running an XML processing performance test.
+     * This demonstrates using JAXB, which was included in Java 8 but removed in Java 11+.
+     * 
+     * @return A PerformanceTestResult object with test metrics
+     */
+    @GetMapping("/xml")
+    public ResponseEntity<PerformanceTestResult> runXmlTest() {
+        logger.info("API request received for XML processing performance test");
+        PerformanceTestResult result = xmlProcessingService.runXmlTest();
+        return ResponseEntity.ok(result);
+    }
+    
+    /**
+     * API endpoint for running a CORBA performance test.
+     * This demonstrates using CORBA, which was included in Java 8 but removed in Java 11+.
+     * 
+     * @return A PerformanceTestResult object with test metrics
+     */
+    @GetMapping("/corba")
+    public ResponseEntity<PerformanceTestResult> runCorbaTest() {
+        logger.info("API request received for CORBA performance test");
+        PerformanceTestResult result = corbaService.runCorbaTest();
         return ResponseEntity.ok(result);
     }
 }
